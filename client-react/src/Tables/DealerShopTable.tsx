@@ -3,15 +3,8 @@ import { Table } from "react-bootstrap";
 import { dealerShop } from "../Interfaces";
 
 export default function DealerShopTable(props: dealerShopsTableProps){
-    const [shops, setShops] = useState<dealerShop[]>();
-    const getData = () => {fetch(process.env.REACT_APP_API + "dealershop/all", {
-        method: "GET",
-        headers: {}
-    })
-    .then(response => response.json())
-    .then(data => {console.log(data); setShops(data)}) };
-
-    useEffect(() => getData(), []);
+    
+    
     return <>
         <Table striped bordered hover size="sm" className = {props.className}>
             <thead>
@@ -23,7 +16,7 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                 </tr>
             </thead>
             <tbody>
-                {shops?.map(shop => <tr key = {shop.ordinalNumber}>
+                {props.shops?.map((shop,index) => <tr key = {index}>
                     <td>{shop.ordinalNumber}</td>
                     <td>{shop.country}</td>
                     <td>{shop.city}</td>
@@ -36,4 +29,5 @@ export default function DealerShopTable(props: dealerShopsTableProps){
 
 interface dealerShopsTableProps {
     className: string;
+    shops: dealerShop[] | undefined;
 }
