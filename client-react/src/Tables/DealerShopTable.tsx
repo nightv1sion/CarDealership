@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Modal, Table } from "react-bootstrap";
 import { dealerShop } from "../Interfaces";
 
 export default function DealerShopTable(props: dealerShopsTableProps){
     
+    const [isEditFormOpened, setIsEditFormOpened] = useState(false);
+
     const deleteShop = (dealershopId: string) => {
         console.log(dealershopId);
         const uri = process.env.REACT_APP_API + "dealershop/" + dealershopId;
@@ -20,6 +22,22 @@ export default function DealerShopTable(props: dealerShopsTableProps){
             console.log(data);
             props.getData();
         })
+    }
+
+    const editShop = (dealerShop: dealerShop)=>{
+        const uri = process.env.REACT_APP_API + "dealershop/";
+        fetch(uri, {
+            method: "EDIT",
+            headers: {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            props.getData();
+        });
     }
     
     return <>
@@ -39,7 +57,16 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                     <td>{shop.country}</td>
                     <td>{shop.city}</td>
                     <td>{shop.address}</td>
-                    <td>{<button key = {index} className="text-danger" onClick = {() => deleteShop(shop.dealerShopId)}>Delete</button>}</td>
+                    <td>{<><button key = {index} className="text-danger" onClick = {() => deleteShop(shop.dealerShopId)}>Delete</button>
+                        <Modal show={isEditFormOpened} onHide = {() => setIsEditFormOpened(false)}>
+                            <Modal.Header>
+                            
+
+                            </Modal.Header>
+                        </Modal>
+                        <button key = {index} className="text-primary" onClick = {() => editShop(shop)}>Edit</button>
+                    </>
+                    }</td>
                 </tr>)}
             </tbody>
         </Table>

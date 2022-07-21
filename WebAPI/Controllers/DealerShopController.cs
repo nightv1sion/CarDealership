@@ -22,19 +22,19 @@ namespace WebAPI.Controllers
         [HttpGet("all")]
         public JsonResult GetDealerShops()
         {
-            var dealershops = _context.DealerShops.ToList();
-            var dealershopsDTO = _mapper.Map<List<DealerShopDTO>>(dealershops);
-            if (dealershopsDTO == null) return new JsonResult("Received data is null");
-            return new JsonResult(dealershopsDTO);
+            var dealerShops = _context.DealerShops.ToList();
+            if (dealerShops.Count == 0) return new JsonResult("There are no dealershops");
+            var dealerShopsDTO = _mapper.Map<List<DealerShopDTO>>(dealerShops);
+            return new JsonResult(dealerShopsDTO);
         }
 
         [HttpPost]
-        public async Task<JsonResult> CreateDealerShopAsync(DealerShopCreationDTO dealershopDTO)
+        public async Task<JsonResult> CreateDealerShopAsync(DealerShopCreationDTO dealerShopDTO)
         {
-            if (dealershopDTO == null) return new JsonResult("Received data is null");
-            var dealershop = _mapper.Map<DealerShop>(dealershopDTO);
+            if (dealerShopDTO == null) return new JsonResult("Received data is null");
+            var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
 
-            _context.DealerShops.Add(dealershop);
+            _context.DealerShops.Add(dealerShop);
             await _context.SaveChangesAsync();
 
             return new JsonResult("Dealer shop successfully created");
@@ -43,15 +43,26 @@ namespace WebAPI.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteDealerShopAsync(Guid id)
         {
-            var dealershop = await _context.DealerShops.FirstOrDefaultAsync(shop => shop.DealerShopId == id);
-            if(dealershop == null)
+            var dealerShop = await _context.DealerShops.FirstOrDefaultAsync(shop => shop.DealerShopId == id);
+            if (dealerShop == null)
             {
-                return new JsonResult ("Dealershop not found");
+                return new JsonResult("Dealershop not found");
             }
-            _context.DealerShops.Remove(dealershop);
+            _context.DealerShops.Remove(dealerShop);
             await _context.SaveChangesAsync();
             return new JsonResult("Dealershop was successfully deleted");
         }
-        
+
+
+        [HttpPut]
+        public async Task<IActionResult> EditDealerShopAsync(DealerShopDTO dealerShopDTO) 
+        {
+            if (dealerShopDTO == null) return new JsonResult("Received data is null"); 
+            var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
+
+            _context.DealerShops.Update(dealerShop);
+            await _context.SaveChangesAsync();
+            return new JsonResult("Dealershop was successfully updated");
+        }
     }
 }

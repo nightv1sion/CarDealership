@@ -9,7 +9,7 @@ namespace WebAPI
         public MappingProfile()
         {
             CreateMap<DealerShop, DealerShopCreationDTO>().ReverseMap();
-            CreateMap<DealerShop, DealerShopDTO>();
+            CreateMap<DealerShop, DealerShopDTO>().ReverseMap();
         }
     }
 }
