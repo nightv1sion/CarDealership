@@ -59,3 +59,5 @@ C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\obj\Debug\net6.0
 C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\obj\Debug\net6.0\WebAPI.pdb
 C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\obj\Debug\net6.0\WebAPI.genruntimeconfig.cache
 C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\obj\Debug\net6.0\ref\WebAPI.dll
+C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

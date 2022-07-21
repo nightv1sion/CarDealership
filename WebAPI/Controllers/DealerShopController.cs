@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
+using WebAPI.Shared.DataTransferObjects;
 
 namespace WebAPI.Controllers
 {
@@ -9,21 +11,34 @@ namespace WebAPI.Controllers
     public class DealerShopController : ControllerBase
     {
         private readonly CarDealershipContext _context;
-        public DealerShopController(CarDealershipContext context)
+        private readonly IMapper _mapper;
+        public DealerShopController(CarDealershipContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        [HttpGet("dealershops")]
+        [HttpGet("all")]
         public JsonResult GetDealerShops()
         {
             var dealershops = _context.DealerShops.ToList();
-            return new JsonResult(dealershops);
+            var dealershopsDTO = _mapper.Map<List<DealerShopCreationDTO>>(dealershops);
+            if (dealershopsDTO == null) return new JsonResult("Received data is null");
+            return new JsonResult(dealershopsDTO);
         }
-        [HttpPost("dealershops")]
-        public JsonResult CreateDealerShop()
+
+        [HttpPost]
+        public async Task<JsonResult> CreateDealerShopAsync(DealerShopCreationDTO dealershopDTO)
         {
-            
+            if (dealershopDTO == null) return new JsonResult("Received data is null");
+            var dealershop = _mapper.Map<DealerShop>(dealershopDTO);
+
+            _context.DealerShops.Add(dealershop);
+            await _context.SaveChangesAsync();
+
+            return new JsonResult("Dealer shop successfully created");
         }
+
+        
     }
 }

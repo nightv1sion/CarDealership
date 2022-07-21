@@ -9,6 +9,7 @@ namespace WebAPI.Models
         public string Address { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
+        public int OrdinalNumber { get; set; }
         public List<Car> Cars { get; set; }
     }
 }
