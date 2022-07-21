@@ -1,6 +1,6 @@
 import { Field, Formik, FormikHelpers, useFormik } from "formik";
 import { Button, Form } from "react-bootstrap";
-import { dealerShop } from "../Interfaces";
+import { dealerShop, dealerShopCreationDTO } from "../Interfaces";
 import * as Yup from "yup";
 import { useState } from "react";
 
@@ -27,7 +27,7 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
     });
 
 
-    const postData = (data: dealerShop) => {
+    const postData = (data: dealerShopCreationDTO) => {
         fetch(process.env.REACT_APP_API + "dealershop", {
             headers: {
                 'Accept': "application/json",

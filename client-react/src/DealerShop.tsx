@@ -7,13 +7,13 @@ import DealerShopTable from "./Tables/DealerShopTable";
 
 export default function Dealershop(){
     const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
-    const [shops, setShops] = useState<dealerShop[]>();
+    const [shops, setShops] = useState<dealerShop[]>([]);
     const getData = () => {fetch(process.env.REACT_APP_API + "dealershop/all", {
         method: "GET",
         headers: {}
     })
     .then(response => response.json())
-    .then(data => {console.log(data); setShops(data)}) };
+    .then(data => {console.log(data); setShops(data ? data : [])}) };
 
     useEffect(() => getData(), []);
     
@@ -23,7 +23,7 @@ export default function Dealershop(){
     return <>
         <div className = "text-center w-75 m-auto">
             <h3 className = "mt-2">DealerShops</h3>
-            <DealerShopTable shops = {shops} className = "mt-3"/>
+            <DealerShopTable shops = {shops ? shops : []} className = "mt-3" getData = {() => getData()}/>
             <button onClick = {handleShow} className = "btn btn-dark">Create a new Dealershop</button>
             <Modal show = {isOpenCreateForm} onHide = {handleClose}>
                 <Modal.Header closeButton>

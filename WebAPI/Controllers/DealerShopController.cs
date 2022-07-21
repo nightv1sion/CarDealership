@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 using WebAPI.Shared.DataTransferObjects;
 
@@ -22,7 +23,7 @@ namespace WebAPI.Controllers
         public JsonResult GetDealerShops()
         {
             var dealershops = _context.DealerShops.ToList();
-            var dealershopsDTO = _mapper.Map<List<DealerShopCreationDTO>>(dealershops);
+            var dealershopsDTO = _mapper.Map<List<DealerShopDTO>>(dealershops);
             if (dealershopsDTO == null) return new JsonResult("Received data is null");
             return new JsonResult(dealershopsDTO);
         }
@@ -39,6 +40,18 @@ namespace WebAPI.Controllers
             return new JsonResult("Dealer shop successfully created");
         }
 
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteDealerShopAsync(Guid id)
+        {
+            var dealershop = await _context.DealerShops.FirstOrDefaultAsync(shop => shop.DealerShopId == id);
+            if(dealershop == null)
+            {
+                return new JsonResult ("Dealershop not found");
+            }
+            _context.DealerShops.Remove(dealershop);
+            await _context.SaveChangesAsync();
+            return new JsonResult("Dealershop was successfully deleted");
+        }
         
     }
 }
