@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddCors();
 builder.Services.AddDbContext<CarDealershipContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CarDealershipConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CarDealershipConnection"), x => x.UseNetTopologySuite());
 });
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

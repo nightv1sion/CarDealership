@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Modal, Table } from "react-bootstrap";
+import DealerShopEditForm from "../Forms/DealerShopEditForm";
 import { dealerShop } from "../Interfaces";
 
 export default function DealerShopTable(props: dealerShopsTableProps){
-    
-    const [isEditFormOpened, setIsEditFormOpened] = useState(false);
+
+    const [isEditFormOpened, setIsEditFormOpened] = useState<boolean[]>(props.shops.map(shop => false));
 
     const deleteShop = (dealershopId: string) => {
         console.log(dealershopId);
@@ -24,22 +25,12 @@ export default function DealerShopTable(props: dealerShopsTableProps){
         })
     }
 
-    const editShop = (dealerShop: dealerShop)=>{
-        const uri = process.env.REACT_APP_API + "dealershop/";
-        fetch(uri, {
-            method: "EDIT",
-            headers: {
-                "Accept": "application/json",
-                "Content-type": "application/json"
-            }
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            props.getData();
-        });
+    const changeArray = (array: boolean[], index:number, state:boolean) => {
+        const newArray = Array.from(array);
+        newArray[index] = state;
+        return newArray;
     }
-    
+
     return <>
         <Table striped bordered hover size="sm" className = {props.className}>
             <thead>
@@ -52,19 +43,22 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                 </tr>
             </thead>
             <tbody>
-                {props.shops.map((shop,index) => <tr key = {index}>
+                {Array.isArray(props.shops) && props.shops?.map((shop,index) => <tr key = {shop.dealerShopId}>
                     <td>{shop.ordinalNumber}</td>
                     <td>{shop.country}</td>
                     <td>{shop.city}</td>
                     <td>{shop.address}</td>
-                    <td>{<><button key = {index} className="text-danger" onClick = {() => deleteShop(shop.dealerShopId)}>Delete</button>
-                        <Modal show={isEditFormOpened} onHide = {() => setIsEditFormOpened(false)}>
+                    <td>{<>
+                    <button className="text-danger" onClick = {() => deleteShop(shop.dealerShopId)}>Delete</button>
+                        <button className="text-primary" onClick = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, true))}>Edit</button>
+                        <Modal key = {index} show={isEditFormOpened[index]} onHide = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))}>
                             <Modal.Header>
-                            
-
+                                <Modal.Title>Edit Dealershop form</Modal.Title>
                             </Modal.Header>
+                            <Modal.Body>
+                                <DealerShopEditForm shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers}/>
+                            </Modal.Body>
                         </Modal>
-                        <button key = {index} className="text-primary" onClick = {() => editShop(shop)}>Edit</button>
                     </>
                     }</td>
                 </tr>)}
@@ -77,4 +71,6 @@ interface dealerShopsTableProps {
     className: string;
     shops: dealerShop[];
     getData: Function;
+    closeForm: Function;
+    allOrdinalNumbers: number[];
 }

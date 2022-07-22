@@ -29,13 +29,18 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CreateDealerShopAsync(DealerShopCreationDTO dealerShopDTO)
+        public async Task<JsonResult> CreateDealerShopAsync([FromForm]DealerShopCreationDTO dealerShopDTO)
         {
             if (dealerShopDTO == null) return new JsonResult("Received data is null");
-            var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
+            //var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
 
-            _context.DealerShops.Add(dealerShop);
-            await _context.SaveChangesAsync();
+            foreach(var file in Request.Form.Files)
+            {
+                Console.WriteLine(file.FileName);
+            }
+
+            /*_context.DealerShops.Add(dealerShop);
+            await _context.SaveChangesAsync();*/
 
             return new JsonResult("Dealer shop successfully created");
         }

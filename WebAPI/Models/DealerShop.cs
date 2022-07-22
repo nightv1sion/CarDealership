@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NetTopologySuite.Geometries;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebAPI.Models
 {
@@ -10,6 +11,11 @@ namespace WebAPI.Models
         public string Country { get; set; }
         public string City { get; set; }
         public int OrdinalNumber { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public Point Location { get; set; }
+        public List<Photo> Photos { get; set; }
         public List<Car> Cars { get; set; }
+
     }
 }
