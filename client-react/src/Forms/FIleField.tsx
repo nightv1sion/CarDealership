@@ -2,7 +2,7 @@ import { ChangeEvent } from "react";
 
 export default function FileField(props: fileFieldProps){
     return <>
-        <input id={props.description} onChange={props.onChange} type = "file" multiple />
+        <input className = "form-control" id={props.description} onChange={props.onChange} type = "file" multiple />
     </>
 }
 

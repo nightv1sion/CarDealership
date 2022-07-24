@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { Button } from "react-bootstrap";
 import {Modal} from "react-bootstrap";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import DealerShopCreateForm from "./Forms/DealerShopCreateForm";
+import MapInput from "./Forms/MapInput";
 import { dealerShop } from "./Interfaces";
 import DealerShopTable from "./Tables/DealerShopTable";
 
@@ -29,7 +31,7 @@ export default function Dealershop(){
             </>
             }
             <button onClick = {handleShow} className = "btn btn-dark">Create a new Dealershop</button>
-            <Modal show = {isOpenCreateForm} onHide = {handleClose}>
+            <Modal className = "modal-md" show = {isOpenCreateForm} onHide = {handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Dealershop form</Modal.Title>
                 </Modal.Header>

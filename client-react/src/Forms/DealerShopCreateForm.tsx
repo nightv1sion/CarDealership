@@ -2,11 +2,14 @@ import { Formik, FormikHelpers, useFormik } from "formik";
 import { Button, Form } from "react-bootstrap";
 import { dealerShop, dealerShopCreationDTO } from "../Interfaces";
 import * as Yup from "yup";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useState } from "react";
 import {uniqueOrdinalNumberRule, firstLetterCapitalRule} from "../ValidationRules";
 import Field from "../Forms/Field";
 import FileField from "./FIleField";
 import axios from "axios";
+import MapInput from "./MapInput";
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
 
 export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
@@ -15,6 +18,8 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
 
     const [touchedFileInput, setTouchedFileInput] = useState<boolean>(false);
 
+    const [position, setPosition] = useState<number[]>([55.738433001378354, 37.541199493253096]);
+
     const formSchema = Yup.object().shape({
         ordinalNumber: Yup.number().required().test((value) => uniqueOrdinalNumberRule.test(value, props.allOrdinalNumbers)),
         country: Yup.string().required().test(firstLetterCapitalRule),
@@ -22,7 +27,7 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
         address: Yup.string().required().test(firstLetterCapitalRule),
         email: Yup.string().required().email(),
         phoneNumber: Yup.string().required(),
-        AmountOfFiles: Yup.number().test((value) => files ? files.length > 0 : false),
+        // location: Yup.string().required().test((value) => value ? checkLocationCoords(value.split(" ")) : false),
     });
 
 
@@ -38,6 +43,8 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
                 formData.append("files", files[i]);
 
         console.log(formData)
+
+        formData.append("location", position[0] + ", " + position[1]);
 
         axios({
             method: "POST",
@@ -68,7 +75,7 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
             address: '',
             email: '',
             phoneNumber: '', 
-            location: '',
+            // location: position[0] + ", " + position[1],
         },
         onSubmit: (values) => {
             console.log(JSON.stringify(values));
@@ -77,6 +84,20 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
         },
         validationSchema: formSchema
     });
+
+    const checkLocationCoords = (nums: string[]) => {
+        return nums.length == 2 && typeof(+nums[0]) == "number" && typeof(+nums[1]) == "number";
+    }
+
+    const locationChange = (event: ChangeEvent<HTMLInputElement> ) => {
+        let nums = event.target.value.split(", ");
+        if(nums.length != 2) 
+            return;
+        if(checkLocationCoords(nums)){
+            let array = new Array(+nums[0], +nums[1]);
+            setPosition(array);
+        }
+    } 
 
     return <>
         <form onSubmit = {formik.handleSubmit} encType="multipart/form-data">
@@ -91,10 +112,20 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
             <Field formik = {formik} description = "Email" inputType="email" errorMessage="is required and must be an email"/>
             
             <Field formik = {formik} description = "Phone Number" errorMessage = "is required" />
+            
+            <div>Location</div>
+            <input className = "form-control" type="text" onChange = {locationChange} value = {position[0] + ", " + position[1]}/>
+            <div className = "mt-3">
+            <MapContainer center = {[position[0], position[1]]} zoom = {13} scrollWheelZoom = {false} >
+                <TileLayer 
+                url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <Marker position = {[position[0], position[1]]}>
+                </Marker>
+            </MapContainer>
+            </div>
 
-            <Field formik = {formik} description = "Location" errorMessage = ""/>
 
-            {files.length < 1 && touchedFileInput ? <div className = "text-danger">Must be one more photos here</div> : undefined}
+            {files.length < 1 && touchedFileInput ? <div className = "text-danger">Must be one more photos here</div> : <div>Photos</div>}
 
             <FileField description="files" onChange={handleChange} />
 

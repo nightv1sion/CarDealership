@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using System.Globalization;
 using WebAPI.Models;
 using WebAPI.Shared.DataTransferObjects;
 
@@ -38,7 +39,10 @@ namespace WebAPI.Controllers
 
             dealerShop.Photos = new List<PhotoForDealerShop>();
             dealerShop.Cars = new List<Car>();
-            dealerShop.Location = new Point(13.003725d, 55.604870d) { SRID = 4326};
+            var numsOfLocation = dealerShopDTO.Location.Split(", ");
+            double coordX = double.Parse(numsOfLocation[0], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+            double coordY = double.Parse(numsOfLocation[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+            dealerShop.Location = new Point(coordX, coordY) { SRID = 4326};
 
             foreach(var file in dealerShopDTO.Files)
             {
