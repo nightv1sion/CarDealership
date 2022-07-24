@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using WebAPI.Models;
@@ -12,9 +13,10 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    partial class CarDealershipContextModelSnapshot : ModelSnapshot
+    [Migration("20220724121939_NewPrecisionForDecimal")]
+    partial class NewPrecisionForDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,8 +115,8 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Size")
-                        .HasPrecision(30, 10)
-                        .HasColumnType("decimal(30,10)");
+                        .HasPrecision(30, 30)
+                        .HasColumnType("decimal(30,30)");
 
                     b.HasKey("PhotoId");
 
@@ -141,8 +143,8 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Size")
-                        .HasPrecision(30, 10)
-                        .HasColumnType("decimal(30,10)");
+                        .HasPrecision(30, 30)
+                        .HasColumnType("decimal(30,30)");
 
                     b.HasKey("PhotoId");
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using WebAPI.Models;
 using WebAPI.Shared.DataTransferObjects;
 
@@ -32,15 +33,48 @@ namespace WebAPI.Controllers
         public async Task<JsonResult> CreateDealerShopAsync([FromForm]DealerShopCreationDTO dealerShopDTO)
         {
             if (dealerShopDTO == null) return new JsonResult("Received data is null");
-            //var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
+            var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
+            dealerShop.DealerShopId = Guid.NewGuid();
 
-            foreach(var file in Request.Form.Files)
+            dealerShop.Photos = new List<PhotoForDealerShop>();
+            dealerShop.Cars = new List<Car>();
+            dealerShop.Location = new Point(13.003725d, 55.604870d) { SRID = 4326};
+
+            foreach(var file in dealerShopDTO.Files)
             {
-                Console.WriteLine(file.FileName);
+                var photo = new PhotoForDealerShop()
+                {
+                    PhotoId = Guid.NewGuid(),
+                    Description = file.FileName,
+                    Size = file.Length,
+                    DealerShop = dealerShop, 
+                    DealerShopId = dealerShop.DealerShopId,
+                };
+                if(file.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        file.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        photo.Bytes = fileBytes;
+                    }
+
+                }
+                dealerShop.Photos.Add(photo);
             }
 
-            /*_context.DealerShops.Add(dealerShop);
-            await _context.SaveChangesAsync();*/
+            _context.DealerShops.Add(dealerShop);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
 
             return new JsonResult("Dealer shop successfully created");
         }

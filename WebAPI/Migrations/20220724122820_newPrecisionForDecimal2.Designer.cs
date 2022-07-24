@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using WebAPI.Models;
@@ -12,9 +13,10 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    partial class CarDealershipContextModelSnapshot : ModelSnapshot
+    [Migration("20220724122820_newPrecisionForDecimal2")]
+    partial class newPrecisionForDecimal2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using WebAPI.Models;
@@ -12,9 +13,10 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    partial class CarDealershipContextModelSnapshot : ModelSnapshot
+    [Migration("20220724113855_MigrationWithNewPhotos")]
+    partial class MigrationWithNewPhotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,9 +114,13 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Size")
-                        .HasPrecision(30, 10)
-                        .HasColumnType("decimal(30,10)");
+                        .HasPrecision(12, 10)
+                        .HasColumnType("decimal(12,10)");
 
                     b.HasKey("PhotoId");
 
@@ -140,9 +146,13 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Size")
-                        .HasPrecision(30, 10)
-                        .HasColumnType("decimal(30,10)");
+                        .HasPrecision(12, 10)
+                        .HasColumnType("decimal(12,10)");
 
                     b.HasKey("PhotoId");
 

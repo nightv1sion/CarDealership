@@ -13,6 +13,6 @@ namespace WebAPI.Models
         public int NumberOfOwners { get; set; }
         public DealerShop DealerShop { get; set; }
         public Guid DealerShopId { get; set; }
-        public List<Photo> Photos { get; set; }
+        public List<PhotoForCar> Photos { get; set; }
     }
 }

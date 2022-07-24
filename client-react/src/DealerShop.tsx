@@ -26,7 +26,6 @@ export default function Dealershop(){
             {
             shops.length === 0 ? <h3>There are no dealershops</h3> 
             : <><DealerShopTable shops = {shops ? shops : []} className = "mt-3" getData = {() => getData()} closeForm = {() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber): []}/>
-            
             </>
             }
             <button onClick = {handleShow} className = "btn btn-dark">Create a new Dealershop</button>

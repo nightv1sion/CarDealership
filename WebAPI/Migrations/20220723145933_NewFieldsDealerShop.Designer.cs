@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using WebAPI.Models;
@@ -12,9 +13,10 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    partial class CarDealershipContextModelSnapshot : ModelSnapshot
+    [Migration("20220723145933_NewFieldsDealerShop")]
+    partial class NewFieldsDealerShop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,7 +97,7 @@ namespace WebAPI.Migrations
                     b.ToTable("DealerShops");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.PhotoForCar", b =>
+            modelBuilder.Entity("WebAPI.Models.Photo", b =>
                 {
                     b.Property<Guid>("PhotoId")
                         .ValueGeneratedOnAdd()
@@ -108,47 +110,28 @@ namespace WebAPI.Migrations
                     b.Property<Guid>("CarId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("DealerShopId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Size")
-                        .HasPrecision(30, 10)
-                        .HasColumnType("decimal(30,10)");
+                        .HasPrecision(12, 10)
+                        .HasColumnType("decimal(12,10)");
 
                     b.HasKey("PhotoId");
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("PhotosForCar");
-                });
-
-            modelBuilder.Entity("WebAPI.Models.PhotoForDealerShop", b =>
-                {
-                    b.Property<Guid>("PhotoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("Bytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<Guid>("DealerShopId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Size")
-                        .HasPrecision(30, 10)
-                        .HasColumnType("decimal(30,10)");
-
-                    b.HasKey("PhotoId");
-
                     b.HasIndex("DealerShopId");
 
-                    b.ToTable("PhotosForDealershop");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Car", b =>
@@ -162,7 +145,7 @@ namespace WebAPI.Migrations
                     b.Navigation("DealerShop");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.PhotoForCar", b =>
+            modelBuilder.Entity("WebAPI.Models.Photo", b =>
                 {
                     b.HasOne("WebAPI.Models.Car", "Car")
                         .WithMany("Photos")
@@ -170,18 +153,11 @@ namespace WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Car");
-                });
-
-            modelBuilder.Entity("WebAPI.Models.PhotoForDealerShop", b =>
-                {
-                    b.HasOne("WebAPI.Models.DealerShop", "DealerShop")
+                    b.HasOne("WebAPI.Models.DealerShop", null)
                         .WithMany("Photos")
-                        .HasForeignKey("DealerShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DealerShopId");
 
-                    b.Navigation("DealerShop");
+                    b.Navigation("Car");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Car", b =>

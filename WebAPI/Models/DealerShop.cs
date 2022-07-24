@@ -14,7 +14,7 @@ namespace WebAPI.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public Point Location { get; set; }
-        public List<Photo> Photos { get; set; }
+        public List<PhotoForDealerShop> Photos { get; set; }
         public List<Car> Cars { get; set; }
 
     }

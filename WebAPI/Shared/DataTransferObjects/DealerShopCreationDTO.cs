@@ -13,7 +13,6 @@ namespace WebAPI.Shared.DataTransferObjects
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Location { get; set; }
-        [DataType(DataType.Upload)]
         public List<IFormFile> Files { get; set; }
     }
 }
