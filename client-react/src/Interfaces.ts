@@ -4,8 +4,12 @@ export interface dealerShop {
     country: string;
     city: string;
     ordinalNumber: number;
+    location: string;
+    email:string;
+    phoneNumber: string;
+    files: File[];
+    fileUrls: string[];
 }
-
 export interface dealerShopCreationDTO{
     address: string;
     country: string;

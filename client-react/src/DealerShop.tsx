@@ -2,12 +2,20 @@ import { useEffect, useState } from "react"
 import { Button } from "react-bootstrap";
 import {Modal} from "react-bootstrap";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import DealerShopCreateForm from "./Forms/DealerShopCreateForm";
+import DealerShopForm from "./Forms/DealerShopForm";
 import MapInput from "./Forms/MapInput";
 import { dealerShop } from "./Interfaces";
 import DealerShopTable from "./Tables/DealerShopTable";
 
 export default function Dealershop(){
+
+    const formatData = (data: dealerShop[]) => {
+        for(let shop of data){
+            shop.location = shop.location.substring(7, shop.location.length-1).split(" ").join(", ");
+        }
+        return data;
+    }
+
     const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
     const [shops, setShops] = useState<dealerShop[]>(new Array<dealerShop>(0));
     const getData = () => {fetch(process.env.REACT_APP_API + "dealershop/all", {
@@ -15,7 +23,9 @@ export default function Dealershop(){
         headers: {}
     })
     .then(response => response.json())
-    .then(data => {console.log(data); setShops(Array.isArray(data) ? data : new Array(0))}) };
+    .then(data => {console.log(data); setShops(Array.isArray(data) ? formatData(data) : new Array(0))})
+
+    };
 
     useEffect(() => getData(), []);
     
@@ -36,7 +46,7 @@ export default function Dealershop(){
                     <Modal.Title>Create Dealershop form</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <DealerShopCreateForm getData={() => getData()} closeForm={() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber) : []}/>
+                    <DealerShopForm getData={() => getData()} closeForm={() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber) : []}/>
                 </Modal.Body>
             </Modal>
             

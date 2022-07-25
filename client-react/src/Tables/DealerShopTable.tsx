@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, Table } from "react-bootstrap";
-import DealerShopEditForm from "../Forms/DealerShopEditForm";
+import DealerShopForm from "../Forms/DealerShopForm";
 import { dealerShop } from "../Interfaces";
 
 export default function DealerShopTable(props: dealerShopsTableProps){
@@ -49,14 +49,14 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                     <td>{shop.city}</td>
                     <td>{shop.address}</td>
                     <td>{<>
-                    <button className="text-danger" onClick = {() => deleteShop(shop.dealerShopId)}>Delete</button>
-                        <button className="text-primary" onClick = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, true))}>Edit</button>
+                    <button className="btn btn-danger" onClick = {() => deleteShop(shop.dealerShopId)}>Delete</button>
+                        <button className="btn btn-primary" onClick = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, true))}>Edit</button>
                         <Modal key = {index} show={isEditFormOpened[index]} onHide = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))}>
                             <Modal.Header>
                                 <Modal.Title>Edit Dealershop form</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <DealerShopEditForm shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers}/>
+                                <DealerShopForm shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers}/>
                             </Modal.Body>
                         </Modal>
                     </>

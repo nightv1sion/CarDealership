@@ -22,11 +22,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("all")]
-        public JsonResult GetDealerShops()
+        public IActionResult GetDealerShops()
         {
             var dealerShops = _context.DealerShops.ToList();
             if (dealerShops.Count == 0) return new JsonResult("There are no dealershops");
+            
             var dealerShopsDTO = _mapper.Map<List<DealerShopDTO>>(dealerShops);
+
             return new JsonResult(dealerShopsDTO);
         }
 
@@ -69,16 +71,7 @@ namespace WebAPI.Controllers
 
             _context.DealerShops.Add(dealerShop);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
+            await _context.SaveChangesAsync();
 
             return new JsonResult("Dealer shop successfully created");
         }
@@ -102,6 +95,14 @@ namespace WebAPI.Controllers
         {
             if (dealerShopDTO == null) return new JsonResult("Received data is null"); 
             var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
+            
+            var numsOfLocation = dealerShopDTO.Location.Split(", ");
+            double coordX = double.Parse(numsOfLocation[0], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+            double coordY = double.Parse(numsOfLocation[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+            dealerShop.Location = new Point(coordX, coordY) { SRID = 4326 };
+
+            dealerShop.Cars = _context.Cars.Where(c => c.DealerShopId == dealerShop.DealerShopId).ToList();
+            dealerShop.Photos = _context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId).ToList();
 
             _context.DealerShops.Update(dealerShop);
             await _context.SaveChangesAsync();

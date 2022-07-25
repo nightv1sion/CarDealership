@@ -4,7 +4,7 @@ import { dealerShop, dealerShopCreationDTO } from "../Interfaces";
 import * as Yup from "yup";
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
 import {uniqueOrdinalNumberRule, firstLetterCapitalRule} from "../ValidationRules";
-import Field from "../Forms/Field";
+import Field from "./Field";
 import FileField from "./FIleField";
 import axios from "axios";
 import MapInput from "./MapInput";
@@ -12,14 +12,51 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
 
-export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
+export default function DealerShopForm(props: dealerShopCreateFormProps){
+    
+    const checkLocationCoords = (nums: string[]) => {
+        return nums.length == 2 && typeof(+nums[0]) == "number" && typeof(+nums[1]) == "number";
+    }
 
-    const [files, setFiles] = useState<File[]>([]);
+    const getLocation = (location: string) => {
+        if(checkLocationCoords(location.split(", "))){
+            let arr = location.split(", ");
+            let pos = [+arr[0], +arr[1]];
+            return pos;
+        }
+        return [13.003725, 55.60487];
+    }
+
+    const [files, setFiles] = useState<File[]>(props.shop && props.shop.files ? props.shop.files : []);
+
+    const [fileUrls, setFileUrls] = useState<string[]>(props.shop && props.shop.fileUrls ? props.shop.fileUrls : []);
 
     const [touchedFileInput, setTouchedFileInput] = useState<boolean>(false);
 
-    const [position, setPosition] = useState<number[]>([55.738433001378354, 37.541199493253096]);
+    const [position, setPosition] = useState<number[]>(props.shop ? getLocation(props.shop.location) : [13.003725, 55.60487]);
 
+    let shop = {
+        ordinalNumber: 0,
+        country: '',
+        city: '',
+        address: '',
+        email: '',
+        phoneNumber: '',
+     };
+    if(props.shop){
+        shop = {
+            ordinalNumber: props.shop.ordinalNumber,
+            country: props.shop.country,
+            city: props.shop.city,
+            address: props.shop.address,
+            email: props.shop.email,
+            phoneNumber: props.shop.phoneNumber,
+        }
+        
+    }
+
+    
+    
     const formSchema = Yup.object().shape({
         ordinalNumber: Yup.number().required().test((value) => uniqueOrdinalNumberRule.test(value, props.allOrdinalNumbers)),
         country: Yup.string().required().test(firstLetterCapitalRule),
@@ -58,36 +95,46 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
     };
     
     const handleChange = (event:ChangeEvent<HTMLInputElement>) => {
-        let tempFilesArray = [];
+        let newFilesArray = new Array(...files);
+        let newFileUrlsArray = new Array(...fileUrls);
         if(event.target.files)
             for(let i = 0; i<event.target.files.length; i++){
-                tempFilesArray.push(event.target.files[i]);
+                newFilesArray.push(event.target.files[i]);
+                newFileUrlsArray.push(URL.createObjectURL(event.target.files[i]));
             }
-        setFiles(tempFilesArray);
+        
+        setFiles(newFilesArray);
+        setFileUrls(newFileUrlsArray);
         setTouchedFileInput(true);
     }
 
+    const updateData = (data: dealerShopCreationDTO) => {
+
+        fetch(process.env.REACT_APP_API + "dealershop",{
+            method: "PUT",
+            headers: {
+                contentType: "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then((response) => {console.log(response); props.getData()});
+    }
+
     const formik = useFormik({initialValues: 
-        {
-            ordinalNumber: 0,
-            country: '',
-            city: '',
-            address: '',
-            email: '',
-            phoneNumber: '', 
-            // location: position[0] + ", " + position[1],
-        },
+        shop,
         onSubmit: (values) => {
             console.log(JSON.stringify(values));
-            postData(values);
+            if(props.shop)
+                updateData(values);
+            else
+                postData(values);
             props.closeForm();
         },
         validationSchema: formSchema
     });
 
-    const checkLocationCoords = (nums: string[]) => {
-        return nums.length == 2 && typeof(+nums[0]) == "number" && typeof(+nums[1]) == "number";
-    }
+    
 
     const locationChange = (event: ChangeEvent<HTMLInputElement> ) => {
         let nums = event.target.value.split(", ");
@@ -97,7 +144,18 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
             let array = new Array(+nums[0], +nums[1]);
             setPosition(array);
         }
-    } 
+    }
+
+    const handleDeleteFile = (index: number) => {
+        let tempArrayFiles = [...files];
+        let tempArrayFileUrl = [...fileUrls];
+
+        tempArrayFiles.splice(index, 1);
+        tempArrayFileUrl.splice(index, 1);
+
+        setFileUrls(tempArrayFileUrl);
+        setFiles(tempArrayFiles)
+    }
 
     return <>
         <form onSubmit = {formik.handleSubmit} encType="multipart/form-data">
@@ -125,13 +183,22 @@ export default function DealerShopCreateForm(props: dealerShopCreateFormProps){
             </div>
 
 
-            {files.length < 1 && touchedFileInput ? <div className = "text-danger">Must be one more photos here</div> : <div>Photos</div>}
+            {files && files.length < 1 && touchedFileInput ? <div className = "text-danger">Must be one more photos here</div> : <div>Photos</div>}
 
-            <FileField description="files" onChange={handleChange} />
+            <FileField description="files" onChange={handleChange} accept = ".jpg, .jpeg, .png"/>
 
+            
+            
+            {fileUrls && fileUrls && fileUrls.map((fileUrl,index) => 
+            {
+                return <div className = "mt-3" key = {index}><img src={fileUrl} style = {{width: "200px"}}/> <button className = "btn btn-danger" type = "button" onClick = {() => handleDeleteFile(index)}>Delete</button></div> 
+            })}
+            
             <div className = 'text-center mt-3'>
-                <button type="submit" className = "btn btn-dark" disabled={!formik.isValid || files.length < 1}>Create</button>
+                <button type="submit" className = "btn btn-dark" disabled={!formik.isValid || files && files.length < 1}>{props.shop ? "Edit" : "Create"}</button>
             </div>
+
+            
         </form>
     </>
 }
@@ -140,4 +207,5 @@ interface dealerShopCreateFormProps {
     getData: Function;
     closeForm: Function;
     allOrdinalNumbers: number[];
+    shop?: dealerShop;
 }
