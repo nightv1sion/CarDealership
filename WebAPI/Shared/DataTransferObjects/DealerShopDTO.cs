@@ -2,6 +2,6 @@
 {
     public class DealerShopDTO : DealerShopCreationDTO
     {
-        public Guid DealerShopId { get; set; }
+        public string DealerShopId { get; set; }
     }
 }

@@ -110,14 +110,33 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
 
     const updateData = (data: dealerShopCreationDTO) => {
 
-        fetch(process.env.REACT_APP_API + "dealershop",{
+        let formData = new FormData();
+        
+        for(let [key, value] of Object.entries(data)){
+            formData.append(key, value);
+        }
+        if(props.shop){
+            formData.append("DealerShopId", props.shop?.dealerShopId);
+        }
+        else {
+            return;
+        }
+        if(files) 
+            for(let i = 0; i<files.length; i++)
+                formData.append("files", files[i]);
+
+        console.log(formData)
+
+        formData.append("location", position[0] + ", " + position[1]);
+
+        axios({
             method: "PUT",
+            url: process.env.REACT_APP_API + "dealershop", 
+            data: formData,
             headers: {
-                contentType: "application/json"
-            },
-            body: JSON.stringify(data)
+                contentType: "multipart/form-data"
+            }
         })
-        .then(response => response.json())
         .then((response) => {console.log(response); props.getData()});
     }
 

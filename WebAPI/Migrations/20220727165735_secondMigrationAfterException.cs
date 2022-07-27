@@ -4,7 +4,7 @@
 
 namespace WebAPI.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class secondMigrationAfterException : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using WebAPI.Models;
 
 #nullable disable
@@ -12,8 +13,8 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    [Migration("20220719181831_newMigration")]
-    partial class newMigration
+    [Migration("20220727165735_secondMigrationAfterException")]
+    partial class secondMigrationAfterException
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,15 +77,27 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Point>("Location")
+                        .IsRequired()
+                        .HasColumnType("geography");
+
                     b.Property<int>("OrdinalNumber")
                         .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DealerShopId");
 
                     b.ToTable("DealerShops");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.Photo", b =>
+            modelBuilder.Entity("WebAPI.Models.PhotoForCar", b =>
                 {
                     b.Property<Guid>("PhotoId")
                         .ValueGeneratedOnAdd()
@@ -101,18 +114,43 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Size")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(30, 10)
+                        .HasColumnType("decimal(30,10)");
 
                     b.HasKey("PhotoId");
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("PhotosForCar");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.PhotoForDealerShop", b =>
+                {
+                    b.Property<Guid>("PhotoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Bytes")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("DealerShopId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Size")
+                        .HasPrecision(30, 10)
+                        .HasColumnType("decimal(30,10)");
+
+                    b.HasKey("PhotoId");
+
+                    b.HasIndex("DealerShopId");
+
+                    b.ToTable("PhotosForDealershop");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Car", b =>
@@ -126,7 +164,7 @@ namespace WebAPI.Migrations
                     b.Navigation("DealerShop");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.Photo", b =>
+            modelBuilder.Entity("WebAPI.Models.PhotoForCar", b =>
                 {
                     b.HasOne("WebAPI.Models.Car", "Car")
                         .WithMany("Photos")
@@ -137,6 +175,17 @@ namespace WebAPI.Migrations
                     b.Navigation("Car");
                 });
 
+            modelBuilder.Entity("WebAPI.Models.PhotoForDealerShop", b =>
+                {
+                    b.HasOne("WebAPI.Models.DealerShop", "DealerShop")
+                        .WithMany("Photos")
+                        .HasForeignKey("DealerShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DealerShop");
+                });
+
             modelBuilder.Entity("WebAPI.Models.Car", b =>
                 {
                     b.Navigation("Photos");
@@ -145,6 +194,8 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.DealerShop", b =>
                 {
                     b.Navigation("Cars");
+
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

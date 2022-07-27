@@ -13,8 +13,8 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    [Migration("20220724113855_MigrationWithNewPhotos")]
-    partial class MigrationWithNewPhotos
+    [Migration("20220727165216_MigrationAfterException")]
+    partial class MigrationAfterException
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -114,13 +114,9 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Size")
-                        .HasPrecision(12, 10)
-                        .HasColumnType("decimal(12,10)");
+                        .HasPrecision(30, 10)
+                        .HasColumnType("decimal(30,10)");
 
                     b.HasKey("PhotoId");
 
@@ -146,13 +142,9 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Size")
-                        .HasPrecision(12, 10)
-                        .HasColumnType("decimal(12,10)");
+                        .HasPrecision(30, 10)
+                        .HasColumnType("decimal(30,10)");
 
                     b.HasKey("PhotoId");
 

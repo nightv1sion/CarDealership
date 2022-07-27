@@ -41,32 +41,11 @@ namespace WebAPI.Controllers
 
             dealerShop.Photos = new List<PhotoForDealerShop>();
             dealerShop.Cars = new List<Car>();
-            var numsOfLocation = dealerShopDTO.Location.Split(", ");
-            double coordX = double.Parse(numsOfLocation[0], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
-            double coordY = double.Parse(numsOfLocation[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
-            dealerShop.Location = new Point(coordX, coordY) { SRID = 4326};
+            dealerShop.Location = ConvertLocation(dealerShopDTO.Location);
 
             foreach(var file in dealerShopDTO.Files)
             {
-                var photo = new PhotoForDealerShop()
-                {
-                    PhotoId = Guid.NewGuid(),
-                    Description = file.FileName,
-                    Size = file.Length,
-                    DealerShop = dealerShop, 
-                    DealerShopId = dealerShop.DealerShopId,
-                };
-                if(file.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        file.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        photo.Bytes = fileBytes;
-                    }
-
-                }
-                dealerShop.Photos.Add(photo);
+                dealerShop.Photos.Add(ConvertFileToPhoto(file, dealerShop));
             }
 
             _context.DealerShops.Add(dealerShop);
@@ -91,22 +70,65 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> EditDealerShopAsync(DealerShopDTO dealerShopDTO) 
+        public async Task<IActionResult> EditDealerShopAsync([FromForm]DealerShopDTO dealerShopDTO) 
         {
             if (dealerShopDTO == null) return new JsonResult("Received data is null"); 
             var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
+            dealerShop.DealerShopId = Guid.Parse(dealerShopDTO.DealerShopId);
             
-            var numsOfLocation = dealerShopDTO.Location.Split(", ");
-            double coordX = double.Parse(numsOfLocation[0], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
-            double coordY = double.Parse(numsOfLocation[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
-            dealerShop.Location = new Point(coordX, coordY) { SRID = 4326 };
+            dealerShop.Location = ConvertLocation(dealerShopDTO.Location);
 
             dealerShop.Cars = _context.Cars.Where(c => c.DealerShopId == dealerShop.DealerShopId).ToList();
-            dealerShop.Photos = _context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId).ToList();
+            if(dealerShopDTO.Files != null)
+            {
+                _context.PhotosForDealershop.RemoveRange(_context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId));
+                dealerShop.Photos = new List<PhotoForDealerShop>();
+                foreach (var file in dealerShopDTO.Files)
+                {
+                    dealerShop.Photos.Add(ConvertFileToPhoto(file, dealerShop));
+                }
+            }
+            else
+            {
+                dealerShop.Photos = _context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId).ToList();
+            }
 
             _context.DealerShops.Update(dealerShop);
             await _context.SaveChangesAsync();
             return new JsonResult("Dealershop was successfully updated");
+        }
+
+
+
+        private PhotoForDealerShop ConvertFileToPhoto(IFormFile file, DealerShop dealerShop)
+        {
+            var photo = new PhotoForDealerShop()
+            {
+                PhotoId = Guid.NewGuid(),
+                Description = file.FileName,
+                Size = file.Length,
+                DealerShop = dealerShop,
+                DealerShopId = dealerShop.DealerShopId,
+            };
+            if (file.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    photo.Bytes = fileBytes;
+                }
+
+            }
+            return photo;
+        }
+
+        private Point ConvertLocation(string location)
+        {
+            var numsOfLocation = location.Split(", ");
+            double coordX = double.Parse(numsOfLocation[0], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+            double coordY = double.Parse(numsOfLocation[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+            return new Point(coordX, coordY) { SRID = 4326};
         }
     }
 }
