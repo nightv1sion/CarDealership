@@ -56,7 +56,7 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                                 <Modal.Title>Edit Dealershop form</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <DealerShopForm shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers}/>
+                                <DealerShopForm shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers.filter(value => value != shop.ordinalNumber)}/>
                             </Modal.Body>
                         </Modal>
                     </>

@@ -79,18 +79,16 @@ namespace WebAPI.Controllers
             dealerShop.Location = ConvertLocation(dealerShopDTO.Location);
 
             dealerShop.Cars = _context.Cars.Where(c => c.DealerShopId == dealerShop.DealerShopId).ToList();
-            if(dealerShopDTO.Files != null)
+            
+            if (dealerShopDTO.Files != null)
             {
-                _context.PhotosForDealershop.RemoveRange(_context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId));
-                dealerShop.Photos = new List<PhotoForDealerShop>();
+                var photos = new List<PhotoForDealerShop>();
                 foreach (var file in dealerShopDTO.Files)
                 {
-                    dealerShop.Photos.Add(ConvertFileToPhoto(file, dealerShop));
+                    photos.Add(ConvertFileToPhoto(file, dealerShop));
                 }
-            }
-            else
-            {
-                dealerShop.Photos = _context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId).ToList();
+                _context.PhotosForDealershop.RemoveRange(_context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId));
+                _context.PhotosForDealershop.AddRange(photos);
             }
 
             _context.DealerShops.Update(dealerShop);

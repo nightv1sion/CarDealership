@@ -52,7 +52,6 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
             email: props.shop.email,
             phoneNumber: props.shop.phoneNumber,
         }
-        
     }
 
     
@@ -213,11 +212,12 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
                 return <div className = "mt-3" key = {index}><img src={fileUrl} style = {{width: "200px"}}/> <button className = "btn btn-danger" type = "button" onClick = {() => handleDeleteFile(index)}>Delete</button></div> 
             })}
             
-            <div className = 'text-center mt-3'>
-                <button type="submit" className = "btn btn-dark" disabled={!formik.isValid || files && files.length < 1}>{props.shop ? "Edit" : "Create"}</button>
-            </div>
+            {props.shop ? <div className = 'text-center mt-3'>
+                <button type="submit" className = "btn btn-dark" disabled={!formik.isValid}>Edit</button>
+            </div> : <div className = 'text-center mt-3'>
+                <button type="submit" className = "btn btn-dark" disabled={!formik.isValid || files && (files.length < 1)}>Create</button>
+            </div> }
 
-            
         </form>
     </>
 }
