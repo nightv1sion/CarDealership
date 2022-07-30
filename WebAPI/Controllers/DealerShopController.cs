@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using System.Globalization;
+using WebAPI.Data;
+using WebAPI.Interfaces;
 using WebAPI.Models;
 using WebAPI.Shared.DataTransferObjects;
 
@@ -12,24 +14,30 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class DealerShopController : ControllerBase
-    {
+    { 
+
+        private readonly IDealerShopRepository _dealerShopRepository;
         private readonly CarDealershipContext _context;
         private readonly IMapper _mapper;
-        public DealerShopController(CarDealershipContext context, IMapper mapper)
+        public DealerShopController(CarDealershipContext context, IMapper mapper, IDealerShopRepository dealerShopRepository)
         {
             _context = context;
             _mapper = mapper;
+            _dealerShopRepository = dealerShopRepository;
         }
 
         [HttpGet("all")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<DealerShop>))]
+        [ProducesResponseType(400)]
         public IActionResult GetDealerShops()
         {
-            var dealerShops = _context.DealerShops.ToList();
-            if (dealerShops.Count == 0) return new JsonResult("There are no dealershops");
+            var dealerShops = _dealerShopRepository.GetDealerShops();
+            if (!ModelState.IsValid)
+                return BadRequest();
             
             var dealerShopsDTO = _mapper.Map<List<DealerShopDTO>>(dealerShops);
 
-            return new JsonResult(dealerShopsDTO);
+            return Ok(dealerShopsDTO);
         }
 
         [HttpPost]

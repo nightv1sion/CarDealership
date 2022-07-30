@@ -2,7 +2,7 @@
 using WebAPI.Models;
 using WebAPI.Shared.DataTransferObjects;
 
-namespace WebAPI
+namespace WebAPI.Helper
 {
     public class MappingProfile : Profile
     {

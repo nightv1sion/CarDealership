@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using WebAPI;
-using WebAPI.Models;
+using WebAPI.Data;
+using WebAPI.Helper;
+using WebAPI.Interfaces;
+using WebAPI.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,8 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddScoped<IDealerShopRepository, DealerShopRepository>();
 
 var app = builder.Build();
 

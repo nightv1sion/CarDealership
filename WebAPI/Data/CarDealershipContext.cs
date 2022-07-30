@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.Models;
 
-namespace WebAPI.Models
+namespace WebAPI.Data
 {
     public class CarDealershipContext : DbContext
     {
@@ -8,7 +9,7 @@ namespace WebAPI.Models
         public DbSet<DealerShop> DealerShops { get; set; }
         public DbSet<PhotoForCar> PhotosForCar { get; set; }
         public DbSet<PhotoForDealerShop> PhotosForDealershop { get; set; }
-        public CarDealershipContext(DbContextOptions<CarDealershipContext> options) : base(options) 
+        public CarDealershipContext(DbContextOptions<CarDealershipContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
