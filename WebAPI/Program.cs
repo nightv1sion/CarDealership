@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Helper;
 using WebAPI.Interfaces;
+using WebAPI.Models;
 using WebAPI.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,9 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IDealerShopRepository, DealerShopRepository>();
+builder.Services.AddScoped<ICarRepository, CarRepository>();
+builder.Services.AddScoped<IPhotoRepository<PhotoForDealerShop>, PhotoRepository<PhotoForDealerShop>>();
+builder.Services.AddScoped<IPhotoRepository<PhotoForCar>, PhotoRepository<PhotoForCar>>();
 
 var app = builder.Build();
 

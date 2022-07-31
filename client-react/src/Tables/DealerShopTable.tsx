@@ -6,7 +6,7 @@ import { dealerShop } from "../Interfaces";
 export default function DealerShopTable(props: dealerShopsTableProps){
 
     const [isEditFormOpened, setIsEditFormOpened] = useState<boolean[]>(props.shops.map(shop => false));
-
+    
     const deleteShop = (dealershopId: string) => {
         console.log(dealershopId);
         const uri = process.env.REACT_APP_API + "dealershop/" + dealershopId;
@@ -18,7 +18,13 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                 "Content-type": "application/json"
             }
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if(props.setStatus)
+                if(response.status == 200)
+                    props.setStatus(true, "Dealershop successfully deleted");
+                else 
+                    props.setStatus(false, "Dealershop wasn't deleted");
+            return response.json()})
         .then((data) => {
             console.log(data);
             props.getData();
@@ -56,7 +62,7 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                                 <Modal.Title>Edit Dealershop form</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <DealerShopForm shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers.filter(value => value != shop.ordinalNumber)}/>
+                                <DealerShopForm setStatus={props.setStatus} shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers.filter(value => value != shop.ordinalNumber)}/>
                             </Modal.Body>
                         </Modal>
                     </>
@@ -73,4 +79,5 @@ interface dealerShopsTableProps {
     getData: Function;
     closeForm: Function;
     allOrdinalNumbers: number[];
+    setStatus?(status: boolean, message: string) : void;
 }

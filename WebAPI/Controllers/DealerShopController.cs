@@ -17,13 +17,15 @@ namespace WebAPI.Controllers
     { 
 
         private readonly IDealerShopRepository _dealerShopRepository;
-        private readonly CarDealershipContext _context;
+        private readonly ICarRepository _carRepository;
+        private readonly IPhotoRepository<PhotoForDealerShop> _photoRepository;
         private readonly IMapper _mapper;
-        public DealerShopController(CarDealershipContext context, IMapper mapper, IDealerShopRepository dealerShopRepository)
+        public DealerShopController(IMapper mapper, IDealerShopRepository dealerShopRepository, ICarRepository carRepository, IPhotoRepository<PhotoForDealerShop> photoRepository)
         {
-            _context = context;
             _mapper = mapper;
             _dealerShopRepository = dealerShopRepository;
+            _carRepository = carRepository;
+            _photoRepository = photoRepository;
         }
 
         [HttpGet("all")]
@@ -41,9 +43,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CreateDealerShopAsync([FromForm]DealerShopCreationDTO dealerShopDTO)
+        public async Task<IActionResult> CreateDealerShopAsync([FromForm]DealerShopCreationDTO dealerShopDTO)
         {
-            if (dealerShopDTO == null) return new JsonResult("Received data is null");
+            if (dealerShopDTO == null) 
+                return BadRequest("Received data is null");
+            if (_dealerShopRepository.DealerShopExistsByOrdinalNumber(dealerShopDTO.OrdinalNumber))
+                return BadRequest("This Ordinal Number already exists");
+            
             var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
             dealerShop.DealerShopId = Guid.NewGuid();
 
@@ -56,38 +62,49 @@ namespace WebAPI.Controllers
                 dealerShop.Photos.Add(ConvertFileToPhoto(file, dealerShop));
             }
 
-            _context.DealerShops.Add(dealerShop);
+            _dealerShopRepository.Add(dealerShop);
 
-            await _context.SaveChangesAsync();
+            await _dealerShopRepository.SaveAsync();
 
-            return new JsonResult("Dealer shop successfully created");
+            return Ok("Dealer shop successfully created");
         }
 
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteDealerShopAsync(Guid id)
         {
-            var dealerShop = await _context.DealerShops.FirstOrDefaultAsync(shop => shop.DealerShopId == id);
-            if (dealerShop == null)
+            if (!_dealerShopRepository.DealerShopExists(id))
+                return NotFound();
+
+            var dealerShop = _dealerShopRepository.GetDealerShop(id);
+            if (!ModelState.IsValid)
             {
-                return new JsonResult("Dealershop not found");
+                return BadRequest(ModelState);
             }
-            _context.DealerShops.Remove(dealerShop);
-            await _context.SaveChangesAsync();
-            return new JsonResult("Dealershop was successfully deleted");
+
+            _dealerShopRepository.Delete(dealerShop);
+            await _dealerShopRepository.SaveAsync();
+
+            return Ok("Dealershop was successfully deleted");
         }
 
 
         [HttpPut]
         public async Task<IActionResult> EditDealerShopAsync([FromForm]DealerShopDTO dealerShopDTO) 
         {
-            if (dealerShopDTO == null) return new JsonResult("Received data is null"); 
+            if (dealerShopDTO == null) 
+                return BadRequest("Received data is null");
+
             var dealerShop = _mapper.Map<DealerShop>(dealerShopDTO);
             dealerShop.DealerShopId = Guid.Parse(dealerShopDTO.DealerShopId);
-            
+
+            if (_dealerShopRepository.DealerShopExistsByOrdinalNumber(dealerShopDTO.OrdinalNumber, dealerShop.DealerShopId))
+                return BadRequest("This Ordinal Number already exists");
+
             dealerShop.Location = ConvertLocation(dealerShopDTO.Location);
 
-            dealerShop.Cars = _context.Cars.Where(c => c.DealerShopId == dealerShop.DealerShopId).ToList();
-            
             if (dealerShopDTO.Files != null)
             {
                 var photos = new List<PhotoForDealerShop>();
@@ -95,13 +112,13 @@ namespace WebAPI.Controllers
                 {
                     photos.Add(ConvertFileToPhoto(file, dealerShop));
                 }
-                _context.PhotosForDealershop.RemoveRange(_context.PhotosForDealershop.Where(p => p.DealerShopId == dealerShop.DealerShopId));
-                _context.PhotosForDealershop.AddRange(photos);
+                _photoRepository.DeleteRange(_dealerShopRepository.GetPhotoOfAnDealerShop(dealerShop.DealerShopId).ToList());
+                await _photoRepository.AddRangeAsync(photos);
             }
 
-            _context.DealerShops.Update(dealerShop);
-            await _context.SaveChangesAsync();
-            return new JsonResult("Dealershop was successfully updated");
+            _dealerShopRepository.Update(dealerShop);
+            await _dealerShopRepository.SaveAsync();
+            return Ok("Dealershop was successfully updated");
         }
 
 

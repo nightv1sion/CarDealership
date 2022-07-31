@@ -18,6 +18,17 @@ export default function Dealershop(){
 
     const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
     const [shops, setShops] = useState<dealerShop[]>(new Array<dealerShop>(0));
+
+    const [statusOfProcess, setStatusOfProcess] = useState<any>(undefined);
+    const [messageAfterProcess, setMessageAfterProcess] = useState<string | undefined>(undefined);
+
+    const setStatus = (status : boolean, message: string) => {
+        setStatusOfProcess(status);
+        setMessageAfterProcess(message);
+        console.log("status now is " + status);
+        setTimeout(() => setStatusOfProcess(undefined), 5000);
+    }
+    
     const getData = () => {fetch(process.env.REACT_APP_API + "dealershop/all", {
         method: "GET",
         headers: {}
@@ -34,10 +45,19 @@ export default function Dealershop(){
 
     return <>
         <div className = "text-center w-75 m-auto">
+            
+            {statusOfProcess === true ? 
+                <div className="alert alert-success mt-2" role="alert">
+                {messageAfterProcess}
+              </div>
+            : statusOfProcess === false ? 
+                <div className = "alert alert-warning mt-2" role="alert">{messageAfterProcess}</div> 
+            : <></>}
             <h3 className = "mt-2">DealerShops</h3>
             {
             shops.length === 0 ? <h3>There are no dealershops</h3> 
-            : <><DealerShopTable shops = {shops ? shops : []} className = "mt-3" getData = {() => getData()} closeForm = {() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber): []}/>
+            : <>
+            <DealerShopTable setStatus = {setStatus} shops = {shops ? shops : []} className = "mt-3" getData = {() => getData()} closeForm = {() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber): []}/>
             </>
             }
             <button onClick = {handleShow} className = "btn btn-dark">Create a new Dealershop</button>
@@ -46,7 +66,7 @@ export default function Dealershop(){
                     <Modal.Title>Create Dealershop form</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <DealerShopForm getData={() => getData()} closeForm={() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber) : []}/>
+                    <DealerShopForm setStatus = {setStatus} getData={() => getData()} closeForm={() => handleClose()} allOrdinalNumbers = {Array.isArray(shops) && shops ? shops.map(shop => shop.ordinalNumber) : []}/>
                 </Modal.Body>
             </Modal>
             

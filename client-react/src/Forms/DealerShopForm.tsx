@@ -90,7 +90,15 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
                 contentType: "multipart/form-data"
             }
         })
-        .then((response) => {console.log(response); props.getData()});
+        .then((response) => {
+            console.log(response); 
+            if(props.setStatus)
+                if(response.status == 200)
+                    props.setStatus(true, "Dealershop was successfully created")
+                else 
+                    props.setStatus(false, "Creation of dealershop was failed");
+            props.getData()
+        });
     };
     
     const handleChange = (event:ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +144,15 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
                 contentType: "multipart/form-data"
             }
         })
-        .then((response) => {console.log(response); props.getData()});
+        .then((response) => {
+            console.log(response); 
+            if(props.setStatus)
+                if(response.status == 200)
+                    props.setStatus(true, "Dealershop was successfully edited");
+                else
+                    props.setStatus(false, "Dealershop wasn't edited");
+            props.getData()
+        });
     }
 
     const formik = useFormik({initialValues: 
@@ -227,4 +243,5 @@ interface dealerShopCreateFormProps {
     closeForm: Function;
     allOrdinalNumbers: number[];
     shop?: dealerShop;
+    setStatus?(status: boolean, message: string) : void;
 }
