@@ -13,6 +13,10 @@ namespace WebAPI.Helper
             CreateMap<DealerShop, DealerShopDTO>().ReverseMap()
                 .ForMember(m => m.DealerShopId, o => o.Ignore())
                 .ForMember(m => m.Location, opt => opt.Ignore());
+
+            CreateMap<Car, CarDTO>();
+            CreateMap<CarCreationDTO, Car>()
+                .ForMember(c => c.DealerShopId, opt => opt.Ignore());
         }
     }
 }

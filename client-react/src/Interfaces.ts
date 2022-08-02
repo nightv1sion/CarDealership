@@ -16,3 +16,10 @@ export interface dealerShopCreationDTO{
     city: string;
     ordinalNumber: number;
 }
+
+export interface car {
+    carId: string;
+    brand: string;
+    model: string;
+    country: string;
+}

@@ -10,6 +10,7 @@ export default function Navigation(){
                 </LinkContainer>
                 <Nav className = "me-auto">
                     <LinkContainer to="/dealershops"><Nav.Link>Dealershops</Nav.Link></LinkContainer>
+                    <LinkContainer to = "/cars"><Nav.Link>Cars</Nav.Link></LinkContainer>
                 </Nav>
             </Container>
         </Navbar>

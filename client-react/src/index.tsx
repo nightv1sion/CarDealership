@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import Navigation from './Navigation';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DealerShop from './DealerShop';
+import Car from './Car';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,6 +18,7 @@ root.render(
       <Routes>
         <Route path = "/" element = {<App/>} />
         <Route path = "/dealershops" element = {<DealerShop/>}/>
+        <Route path = "/cars" element = {<Car/>} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
