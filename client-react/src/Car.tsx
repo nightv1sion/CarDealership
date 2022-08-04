@@ -26,6 +26,6 @@ export default function Car(){
 
     return <>
         <div className="text-center"><h3>Cars</h3></div>
-        <CarTable cars = {cars}/>
+        <CarTable cars = {cars} className = />
     </>
 }

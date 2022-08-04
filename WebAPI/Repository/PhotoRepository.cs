@@ -1,6 +1,5 @@
-﻿using WebAPI.Data;
+﻿using Repository;
 using WebAPI.Interfaces;
-using WebAPI.Models;
 
 namespace WebAPI.Repository
 {

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Interfaces;
-using WebAPI.Models;
-using WebAPI.Shared.DataTransferObjects;
+using Shared.DataTransferObjects;
 
 namespace WebAPI.Controllers
 {

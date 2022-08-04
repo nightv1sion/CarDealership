@@ -1,4 +1,4 @@
-﻿using WebAPI.Models;
+﻿using Entities.Models;
 
 namespace WebAPI.Interfaces
 {

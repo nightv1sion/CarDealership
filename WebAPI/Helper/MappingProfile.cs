@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using WebAPI.Models;
-using WebAPI.Shared.DataTransferObjects;
+using Entities.Models;
+using Shared.DataTransferObjects;
+
 
 namespace WebAPI.Helper
 {
