@@ -9,6 +9,9 @@ namespace Contracts
 {
     public interface IDealerShopRepository
     {
-        IEnumerable<DealerShop> GetAllDealerShops(bool trackChanges);
+        Task<IEnumerable<DealerShop>> GetAllDealerShopsAsync(bool trackChanges);
+        Task<DealerShop> GetDealerShopAsync(Guid id, bool trackChanges);
+        void DeleteDealerShop(DealerShop dealerShop);
+        void CreateDealerShop(DealerShop dealerShop);
     }
 }

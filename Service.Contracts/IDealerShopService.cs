@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Shared.DataTransferObjects;
 
 
@@ -10,6 +11,12 @@ namespace Service.Contracts
 {
     public interface IDealerShopService
     {
-        IEnumerable<DealerShopDTO> GetAllDealerShops(bool trackChanges);
+        Task<IEnumerable<DealerShopDTO>> GetAllDealerShopsAsync(bool trackChanges);
+        Task<DealerShopDTO> GetDealerShopAsync(Guid id, bool trackChanges);
+        Task DeleteDealerShopAsync(Guid id);
+        Task<DealerShopDTO> CreateDealerShopAsync(DealerShopForCreationDTO dealerShopCreationDto, List<IFormFile> files);
+        Task<DealerShopDTO> UpdateDealerShopAsync(Guid id, DealerShopForUpdateDTO dealerShopForUpdateDto);
+        Task<IEnumerable<DealerShopMiniDTO>> GetOrdinalNumbersAsync();
+
     }
 }

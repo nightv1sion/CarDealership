@@ -12,16 +12,19 @@ namespace Repository
         private readonly CarDealershipContext _context;
         private readonly Lazy<ICarRepository> _carRepository;
         private readonly Lazy<IDealerShopRepository> _dealerShopRepository;
+        private readonly Lazy<IPhotoForDealerShopRepository> _photoForDealerShopRepository;
 
         public RepositoryManager(CarDealershipContext context)
         {
             _context = context;
             _carRepository = new Lazy<ICarRepository>(() => new CarRepository(_context));
             _dealerShopRepository = new Lazy<IDealerShopRepository>(() => new DealerShopRepository(_context));
+            _photoForDealerShopRepository = new Lazy<IPhotoForDealerShopRepository>(() => new PhotoForDealerShopRepository(_context));
         }
 
         public ICarRepository Car => _carRepository.Value;
         public IDealerShopRepository DealerShop => _dealerShopRepository.Value;
-        public void Save() => _context.SaveChanges();
+        public IPhotoForDealerShopRepository PhotoForDealerShop => _photoForDealerShopRepository.Value;
+        public async Task SaveAsync() => await _context.SaveChangesAsync();
     }
 }

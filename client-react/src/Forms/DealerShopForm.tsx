@@ -1,8 +1,8 @@
 import { Formik, FormikHelpers, useFormik } from "formik";
 import { Button, Form } from "react-bootstrap";
-import { dealerShop, dealerShopCreationDTO } from "../Interfaces";
+import { dealerShop, dealerShopCreationDTO, photoDTO } from "../Interfaces";
 import * as Yup from "yup";
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import {uniqueOrdinalNumberRule, firstLetterCapitalRule} from "../ValidationRules";
 import Field from "./Field";
 import FileField from "./FIleField";
@@ -10,6 +10,7 @@ import axios from "axios";
 import MapInput from "./MapInput";
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { format } from "node:path";
 
 
 export default function DealerShopForm(props: dealerShopCreateFormProps){
@@ -26,14 +27,69 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
         }
         return [13.003725, 55.60487];
     }
+    
+    const getPhotos = (dealerShopId: string) => {
+        let photos: photoDTO[]=[];
+        fetch(process.env.REACT_APP_API + "photos/dealershop/" + dealerShopId, 
+        {
+            method: "GET",
+            headers: {
+            }
+        })
+        .then(response => {
+            if(response.status == 200)
+                return response.json();
+            else {
+                console.log(response.status + response.statusText);
+            }
+        })
+        .then(data => {
+            for(let i = 0; i<data.length; i++){
+                let photo = {
+                    id: data[i].id, 
+                    name: data[i].name, 
+                    picture: data[i].picture, 
+                    pictureFormat: data[i].pictureFormat};
+                photos.push(photo);
+            }
+        });
+        console.log("photos:");
+        console.log(photos);
+        return photos;
+    }
 
-    const [files, setFiles] = useState<File[]>(props.shop && props.shop.files ? props.shop.files : []);
+    const copyAllPhotosFromProps = () => {
+        let photosForReturn:photoDTO[] = [];
 
-    const [fileUrls, setFileUrls] = useState<string[]>(props.shop && props.shop.fileUrls ? props.shop.fileUrls : []);
+        if(props.photos)
+            for(let i=0; i<props.photos.length; i++){
+                let tempPhoto:photoDTO = {
+                    id: props.photos[i].id.slice(),
+                    picture: props.photos[i].picture.slice(),
+                    pictureFormat: props.photos[i].pictureFormat.slice(),
+                    name: props.photos[i].name.slice()
+                }
+                photosForReturn.push(tempPhoto);
+            }
+        return photosForReturn
+    } 
+
+    const [photos, setPhotos] = useState<photoDTO[]>(props.photos ? props.photos : []);
+
+    const [files, setFiles] = useState<File[]>([]);
+
+    const [fileUrls, setFileUrls] = useState<string[]>([]);
 
     const [touchedFileInput, setTouchedFileInput] = useState<boolean>(false);
 
     const [position, setPosition] = useState<number[]>(props.shop ? getLocation(props.shop.location) : [13.003725, 55.60487]);
+
+    const getPhotosForState = () => {
+        if(props.shop)
+            setPhotos(getPhotos(props.shop.dealerShopId));
+    }
+
+    let initialPhotos:photoDTO[] | undefined = undefined;
 
     let shop = {
         ordinalNumber: 0,
@@ -43,6 +99,7 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
         email: '',
         phoneNumber: '',
      };
+
     if(props.shop){
         shop = {
             ordinalNumber: props.shop.ordinalNumber,
@@ -52,6 +109,8 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
             email: props.shop.email,
             phoneNumber: props.shop.phoneNumber,
         }
+        if(props.photos)
+            initialPhotos = copyAllPhotosFromProps();
     }
 
     
@@ -82,9 +141,10 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
 
         formData.append("location", position[0] + ", " + position[1]);
 
+        console.log(formData);
         axios({
             method: "POST",
-            url: process.env.REACT_APP_API + "dealershop", 
+            url: process.env.REACT_APP_API + "dealershops", 
             data: formData,
             headers: {
                 contentType: "multipart/form-data"
@@ -101,6 +161,8 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
         });
     };
     
+    
+
     const handleChange = (event:ChangeEvent<HTMLInputElement>) => {
         let newFilesArray = new Array(...files);
         let newFileUrlsArray = new Array(...fileUrls);
@@ -113,6 +175,28 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
         setFiles(newFilesArray);
         setFileUrls(newFileUrlsArray);
         setTouchedFileInput(true);
+    }
+
+    const handleDeletePhoto = (photoId: string) => {
+        let newPhotos = photos.slice().filter(p => p.id != photoId);
+        if(newPhotos)
+            setPhotos(newPhotos);
+        console.log(photos);
+        
+    }
+    
+    const deleteOldPhotos = () => {
+        if(props.photos){
+            for(let i = 0; i<props.photos.length; i++)
+                if(photos.findIndex(p => initialPhotos && p.id == initialPhotos[i].id) == -1)
+                    fetch(process.env.REACT_APP_API + "photos/dealershop/" + props.photos[i].id, 
+                    {
+                        method: "DELETE",
+                        headers: {}
+                    })
+                    .then(response => {console.log("status of deleting photo: " + response.status); return response.json()})
+                    .then(data => console.log(data));
+        }
     }
 
     const updateData = (data: dealerShopCreationDTO) => {
@@ -138,7 +222,7 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
 
         axios({
             method: "PUT",
-            url: process.env.REACT_APP_API + "dealershop", 
+            url: process.env.REACT_APP_API + "dealershops/" + props.shop.dealerShopId, 
             data: formData,
             headers: {
                 contentType: "multipart/form-data"
@@ -148,7 +232,10 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
             console.log(response); 
             if(props.setStatus)
                 if(response.status == 200)
-                    props.setStatus(true, "Dealershop was successfully edited");
+                    {
+                        deleteOldPhotos();
+                        props.setStatus(true, "Dealershop was successfully edited");
+                    }
                 else
                     props.setStatus(false, "Dealershop wasn't edited");
             props.getData()
@@ -216,18 +303,31 @@ export default function DealerShopForm(props: dealerShopCreateFormProps){
             </MapContainer>
             </div>
 
-
+            
             {files && files.length < 1 && touchedFileInput ? <div className = "text-danger">Must be one more photos here</div> : <div>Photos</div>}
 
             <FileField description="files" onChange={handleChange} accept = ".jpg, .jpeg, .png"/>
 
             
             
+            
             {fileUrls && fileUrls && fileUrls.map((fileUrl,index) => 
             {
-                return <div className = "mt-3" key = {index}><img src={fileUrl} style = {{width: "200px"}}/> <button className = "btn btn-danger" type = "button" onClick = {() => handleDeleteFile(index)}>Delete</button></div> 
+                return <div className = "mt-3" key = {index}>
+                    <img src={fileUrl} style = {{width: "200px"}}/> 
+                    <button className = "btn btn-danger" type = "button" onClick = {() => handleDeleteFile(index)}>Delete</button>
+                </div> 
             })}
             
+            {photos.length != 0 ? 
+            photos.map((photo, index) => 
+             { 
+              return <div key = {index} className = "mt-3">
+                <img style = {{"width": "200px"}} src = {`data:${photo.pictureFormat};base64,${photo.picture}`}/> 
+                <button className = "btn btn-danger" type = "button" onClick = {() => handleDeletePhoto(photo.id)}>Delete</button>
+                </div>
+            }) : <></>}
+
             {props.shop ? <div className = 'text-center mt-3'>
                 <button type="submit" className = "btn btn-dark" disabled={!formik.isValid}>Edit</button>
             </div> : <div className = 'text-center mt-3'>
@@ -244,4 +344,5 @@ interface dealerShopCreateFormProps {
     allOrdinalNumbers: number[];
     shop?: dealerShop;
     setStatus?(status: boolean, message: string) : void;
+    photos?: photoDTO[];
 }

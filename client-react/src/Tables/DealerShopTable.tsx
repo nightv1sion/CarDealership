@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Modal, Table } from "react-bootstrap";
 import DealerShopForm from "../Forms/DealerShopForm";
-import { dealerShop } from "../Interfaces";
+import { dealerShop, photoDTO } from "../Interfaces";
 
 export default function DealerShopTable(props: dealerShopsTableProps){
 
@@ -9,7 +9,7 @@ export default function DealerShopTable(props: dealerShopsTableProps){
     
     const deleteShop = (dealershopId: string) => {
         console.log(dealershopId);
-        const uri = process.env.REACT_APP_API + "dealershop/" + dealershopId;
+        const uri = process.env.REACT_APP_API + "dealershops/" + dealershopId;
         console.log(uri);
         fetch(uri, {
             method: "DELETE",
@@ -20,11 +20,14 @@ export default function DealerShopTable(props: dealerShopsTableProps){
         })
         .then((response) => {
             if(props.setStatus)
-                if(response.status == 200)
+                if(response.status == 204)
                     props.setStatus(true, "Dealershop successfully deleted");
                 else 
+                {
                     props.setStatus(false, "Dealershop wasn't deleted");
-            return response.json()})
+                    return response.json()}
+                }
+        )
         .then((data) => {
             console.log(data);
             props.getData();
@@ -35,6 +38,36 @@ export default function DealerShopTable(props: dealerShopsTableProps){
         const newArray = Array.from(array);
         newArray[index] = state;
         return newArray;
+    }
+
+    const getPhotos = (dealerShopId: string) => {
+        let photos: photoDTO[]=[];
+        fetch(process.env.REACT_APP_API + "photos/dealershop/" + dealerShopId, 
+        {
+            method: "GET",
+            headers: {
+            }
+        })
+        .then(response => {
+            if(response.status == 200)
+                return response.json();
+            else {
+                console.log(response.status + response.statusText);
+            }
+        })
+        .then(data => {
+            for(let i = 0; i<data.length; i++){
+                let photo = {
+                    id: data[i].id, 
+                    name: data[i].name, 
+                    picture: data[i].picture, 
+                    pictureFormat: data[i].pictureFormat};
+                photos.push(photo);
+            }
+        });
+        console.log("photos:");
+        console.log(photos);
+        return photos;
     }
 
     return <>
@@ -62,7 +95,7 @@ export default function DealerShopTable(props: dealerShopsTableProps){
                                 <Modal.Title>Edit Dealershop form</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <DealerShopForm setStatus={props.setStatus} shop={shop} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers.filter(value => value != shop.ordinalNumber)}/>
+                                <DealerShopForm setStatus={props.setStatus} shop={shop} photos = {getPhotos(shop.dealerShopId)} getData = {props.getData} closeForm = {() => setIsEditFormOpened(changeArray(isEditFormOpened, index, false))} allOrdinalNumbers = {props.allOrdinalNumbers.filter(value => value != shop.ordinalNumber)}/>
                             </Modal.Body>
                         </Modal>
                     </>

@@ -1,7 +1,7 @@
-﻿namespace Shared.DataTransferObjects
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Shared.DataTransferObjects
 {
-    public class DealerShopDTO : DealerShopCreationDTO
-    {
-        public string DealerShopId { get; set; }
-    }
+    public record DealerShopDTO(Guid DealerShopId, string Address, string Country, string City, int OrdinalNumber,
+        string Email, string PhoneNumber, string Location);
 }

@@ -11,7 +11,7 @@ namespace Repository
         public DbSet<PhotoForDealerShop> PhotosForDealershop { get; set; }
         public CarDealershipContext(DbContextOptions<CarDealershipContext> options) : base(options)
         {
-            Database.EnsureCreated();
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,5 +25,6 @@ namespace Repository
                 .HasPrecision(30, 10);
             base.OnModelCreating(modelBuilder);
         }
+
     }
 }

@@ -1,7 +1,9 @@
+import { Button } from "react-bootstrap";
 import {Table} from "react-bootstrap";
 import { car } from "../Interfaces";
 
 export default function CarTable(props: carTableProps){
+    
     return <>
         <Table striped bordered hover className = "w-50 m-auto">
             <thead>

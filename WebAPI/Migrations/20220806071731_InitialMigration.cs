@@ -6,7 +6,7 @@ using NetTopologySuite.Geometries;
 
 namespace WebAPI.Migrations
 {
-    public partial class MigrationAfterException : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,7 @@ namespace WebAPI.Migrations
                     Bytes = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Size = table.Column<decimal>(type: "decimal(30,10)", precision: 30, scale: 10, nullable: false),
+                    PhotoFormat = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DealerShopId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

@@ -13,8 +13,8 @@ using Repository;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CarDealershipContext))]
-    [Migration("20220727165216_MigrationAfterException")]
-    partial class MigrationAfterException
+    [Migration("20220806071731_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,7 +25,7 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("WebAPI.Models.Car", b =>
+            modelBuilder.Entity("Entities.Models.Car", b =>
                 {
                     b.Property<Guid>("CarId")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace WebAPI.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.DealerShop", b =>
+            modelBuilder.Entity("Entities.Models.DealerShop", b =>
                 {
                     b.Property<Guid>("DealerShopId")
                         .ValueGeneratedOnAdd()
@@ -97,7 +97,7 @@ namespace WebAPI.Migrations
                     b.ToTable("DealerShops");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.PhotoForCar", b =>
+            modelBuilder.Entity("Entities.Models.PhotoForCar", b =>
                 {
                     b.Property<Guid>("PhotoId")
                         .ValueGeneratedOnAdd()
@@ -125,7 +125,7 @@ namespace WebAPI.Migrations
                     b.ToTable("PhotosForCar");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.PhotoForDealerShop", b =>
+            modelBuilder.Entity("Entities.Models.PhotoForDealerShop", b =>
                 {
                     b.Property<Guid>("PhotoId")
                         .ValueGeneratedOnAdd()
@@ -142,6 +142,10 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhotoFormat")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Size")
                         .HasPrecision(30, 10)
                         .HasColumnType("decimal(30,10)");
@@ -153,9 +157,9 @@ namespace WebAPI.Migrations
                     b.ToTable("PhotosForDealershop");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.Car", b =>
+            modelBuilder.Entity("Entities.Models.Car", b =>
                 {
-                    b.HasOne("WebAPI.Models.DealerShop", "DealerShop")
+                    b.HasOne("Entities.Models.DealerShop", "DealerShop")
                         .WithMany("Cars")
                         .HasForeignKey("DealerShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -164,9 +168,9 @@ namespace WebAPI.Migrations
                     b.Navigation("DealerShop");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.PhotoForCar", b =>
+            modelBuilder.Entity("Entities.Models.PhotoForCar", b =>
                 {
-                    b.HasOne("WebAPI.Models.Car", "Car")
+                    b.HasOne("Entities.Models.Car", "Car")
                         .WithMany("Photos")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -175,9 +179,9 @@ namespace WebAPI.Migrations
                     b.Navigation("Car");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.PhotoForDealerShop", b =>
+            modelBuilder.Entity("Entities.Models.PhotoForDealerShop", b =>
                 {
-                    b.HasOne("WebAPI.Models.DealerShop", "DealerShop")
+                    b.HasOne("Entities.Models.DealerShop", "DealerShop")
                         .WithMany("Photos")
                         .HasForeignKey("DealerShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -186,12 +190,12 @@ namespace WebAPI.Migrations
                     b.Navigation("DealerShop");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.Car", b =>
+            modelBuilder.Entity("Entities.Models.Car", b =>
                 {
                     b.Navigation("Photos");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.DealerShop", b =>
+            modelBuilder.Entity("Entities.Models.DealerShop", b =>
                 {
                     b.Navigation("Cars");
 

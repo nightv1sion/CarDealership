@@ -29,7 +29,7 @@ export default function Dealershop(){
         setTimeout(() => setStatusOfProcess(undefined), 5000);
     }
     
-    const getData = () => {fetch(process.env.REACT_APP_API + "dealershop/all", {
+    const getData = () => {fetch(process.env.REACT_APP_API + "dealershops", {
         method: "GET",
         headers: {}
     })

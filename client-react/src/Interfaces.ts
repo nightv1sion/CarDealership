@@ -23,3 +23,10 @@ export interface car {
     model: string;
     country: string;
 }
+
+export interface photoDTO {
+    id: string;
+    name: string;
+    picture: string;
+    pictureFormat: string;
+}

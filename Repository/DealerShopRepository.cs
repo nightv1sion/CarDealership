@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,15 @@ namespace Repository
         {
         }
 
-        public IEnumerable<DealerShop> GetAllDealerShops(bool trackChanges) => FindAll(trackChanges).OrderBy(d => d.OrdinalNumber).ToList();
+        public async Task<IEnumerable<DealerShop>> GetAllDealerShopsAsync(bool trackChanges) => 
+            await FindAll(trackChanges).OrderBy(d => d.OrdinalNumber).ToListAsync();
+
+        public async Task<DealerShop> GetDealerShopAsync(Guid id, bool trackChanges) =>
+            await FindByCondition(d => d.DealerShopId.Equals(id), trackChanges)
+            .SingleOrDefaultAsync();
+
+        public void DeleteDealerShop(DealerShop dealerShop) => Delete(dealerShop);
+        public void CreateDealerShop(DealerShop dealerShop) => Create(dealerShop);
+
     }
 }

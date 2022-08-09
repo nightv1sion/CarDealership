@@ -10,5 +10,6 @@ namespace Service.Contracts
     {
         ICarService CarService { get; }
         IDealerShopService DealerShopService { get; }
+        IPhotoForDealerShopService PhotoForDealerShopService { get; }
     }
 }

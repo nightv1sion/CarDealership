@@ -10,6 +10,7 @@ namespace Contracts
     {
         ICarRepository Car { get; }
         IDealerShopRepository DealerShop { get; }
-        void Save();
+        IPhotoForDealerShopRepository PhotoForDealerShop { get; }
+        Task SaveAsync();
     }
 }

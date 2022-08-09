@@ -10,6 +10,7 @@ namespace Entities.Models
         public byte[] Bytes { get; set; }
         public string Description { get; set; }
         public decimal Size { get; set; }
+        public string PhotoFormat { get; set; }
         public Guid DealerShopId { get; set; }
 
         [ForeignKey("DealerShopId")]
