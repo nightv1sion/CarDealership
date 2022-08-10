@@ -29,7 +29,15 @@ namespace WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BodyType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -40,7 +48,23 @@ namespace WebAPI.Migrations
                     b.Property<Guid>("DealerShopId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Drive")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EngineType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LicencePlates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modification")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -49,6 +73,10 @@ namespace WebAPI.Migrations
 
                     b.Property<int>("ProductionYear")
                         .HasColumnType("int");
+
+                    b.Property<string>("Transmission")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CarId");
 

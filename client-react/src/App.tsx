@@ -8,7 +8,7 @@ import DealerShop from './DealerShop';
 function App() {
   return (
     <>
-    <h3>App</h3>
+      <h3 className = "text-center">It is web app for keep a records in dealership</h3>
     </>
   );
 }

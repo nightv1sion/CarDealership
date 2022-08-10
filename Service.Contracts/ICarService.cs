@@ -13,5 +13,7 @@ namespace Service.Contracts
         Task<CarDTO> CreateCarAsync(Guid dealerShopId, CarForCreationDTO car);
         Task<CarDTO> GetCarForDealerShopByIdAsync(Guid dealerShopId, Guid id, bool trackChanges);
         Task DeleteCarForDealerShop(Guid dealerShopId, Guid id, bool trackChanges);
+        Task<IEnumerable<CarDTO>> GetCarForDealerShopCollectionAsync(IEnumerable<Guid> ids, bool trackChanges);
+
     }
 }

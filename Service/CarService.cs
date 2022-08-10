@@ -54,6 +54,23 @@ namespace Service
             return carForReturn;
         }
 
+        public async Task<IEnumerable<CarDTO>> GetCarForDealerShopCollectionAsync(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            List<CarDTO> cars = new List<CarDTO>();
+
+            foreach(var id in ids)
+            {
+                var carsDtos = await GetCarsForDealerShopAsync(id, trackChanges);
+                foreach(var carDto in carsDtos)
+                {
+                    var dealerShop = await _repository.DealerShop.GetDealerShopAsync(id, trackChanges);
+                    carDto.DealerShopOrdinalNumber = dealerShop != null ? dealerShop.OrdinalNumber : throw new DealerShopNotFoundException(id);
+                }
+                cars.AddRange(carsDtos);
+            }
+            return cars;
+        }
+
         public async Task DeleteCarForDealerShop(Guid dealerShopId, Guid id, bool trackChanges)
         {
             await CheckDealerShopIfExists(dealerShopId, trackChanges);
@@ -76,5 +93,7 @@ namespace Service
                 throw new CarNotFoundException(id);
             return car;
         }
+
+
     }
 }

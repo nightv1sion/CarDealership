@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAPI.Presentation.ActionFilters;
+using WebAPI.Presentation.ModelBinders;
 
 namespace WebAPI.Presentation.Contollers
 {
@@ -48,6 +50,12 @@ namespace WebAPI.Presentation.Contollers
         {
             await _service.CarService.DeleteCarForDealerShop(dealerShopId, id, false);
             return NoContent();
+        }
+        [HttpGet("/api/dealershops/collection/({ids})/cars")]
+        public async Task<IActionResult> GetCarsForDealerShopCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        {
+            var cars = await _service.CarService.GetCarForDealerShopCollectionAsync(ids, false);
+            return Ok(cars);
         }
     }
 }

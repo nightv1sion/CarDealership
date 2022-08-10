@@ -19,9 +19,35 @@ export interface dealerShopCreationDTO{
 
 export interface car {
     carId: string;
+    licencePlates: string;
     brand: string;
     model: string;
     country: string;
+    bodyType: string;
+    modification: string;
+    transmission: string;
+    drive: string;
+    engineType: string;
+    color: string;
+    productionYear: number;
+    numberOfOwners: number;
+    dealerShopOrdinalNumber: number;
+}
+
+export interface carForCreateDTO {
+    licencePlates: string;
+    brand: string;
+    model: string;
+    country: string;
+    bodyType: string;
+    modification: string;
+    transmission: string;
+    drive: string;
+    engineType: string;
+    color: string;
+    productionYear: number;
+    numberOfOwners: number;
+    dealerShopOrdinalNumber: number;
 }
 
 export interface photoDTO {
@@ -29,4 +55,9 @@ export interface photoDTO {
     name: string;
     picture: string;
     pictureFormat: string;
+}
+
+export interface dealerShopMiniDTO {
+    id: string;
+    ordinalNumber: number;
 }
