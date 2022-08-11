@@ -32,6 +32,8 @@ namespace WebAPI.Helper
 
             CreateMap<DealerShop, DealerShopMiniDTO>()
                 .ForMember(c => c.Id, opt => opt.MapFrom(c => c.DealerShopId));
+
+            CreateMap<CarForEditDto, Car>();
         }
     }
 }

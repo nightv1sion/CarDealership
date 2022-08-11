@@ -14,6 +14,8 @@ export default function Car(){
 
     const [options, setOptions] = useState<any[]>([]);
 
+    const [chosenOptions, setChosenOptions] = useState<string[]>([]);
+
     const [isFormOpened, setIsFormOpened] = useState<boolean>(false);
 
     const dealerShopsToOptions = (arr: dealerShopMiniDTO[]) => {
@@ -105,6 +107,7 @@ export default function Car(){
     // }
 
     const selectOnChange = (newValue: MultiValue<any>) => {
+        setChosenOptions(newValue.map(v => v.value));
         getData(newValue.map(v => v.value));
     }
 
@@ -135,13 +138,13 @@ export default function Car(){
                                 <Modal.Title>Create Car Form</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <CarFormForCreate closeForm = {handleClose} dealerShops = {dealerShops}/>
+                                <CarFormForCreate closeForm = {handleClose} dealerShops = {dealerShops} />
                             </Modal.Body>
                         </Modal>
                     </Col>
                 </Row>
             </Container>
             </div>
-        <CarTable cars = {cars}/>
+        <CarTable cars = {cars} dealerShops = {dealerShops} getAllCars = {() => getData(chosenOptions)}/>
     </>
 }

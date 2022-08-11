@@ -48,7 +48,7 @@ namespace WebAPI.Presentation.Contollers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCarForDealerShop(Guid dealerShopId, Guid id)
         {
-            await _service.CarService.DeleteCarForDealerShop(dealerShopId, id, false);
+            await _service.CarService.DeleteCarForDealerShopAsync(dealerShopId, id, false);
             return NoContent();
         }
         [HttpGet("/api/dealershops/collection/({ids})/cars")]
@@ -56,6 +56,13 @@ namespace WebAPI.Presentation.Contollers
         {
             var cars = await _service.CarService.GetCarForDealerShopCollectionAsync(ids, false);
             return Ok(cars);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> EditCarForDealerShop(Guid dealerShopId, Guid id, [FromBody] CarForEditDto carForEdit)
+        {
+            await _service.CarService.EditCarForDealerShopAsync(dealerShopId, id, carForEdit, true);
+            return NoContent();
         }
     }
 }

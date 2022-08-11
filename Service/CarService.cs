@@ -27,7 +27,7 @@ namespace Service
 
         public async Task<IEnumerable<CarDTO>> GetCarsForDealerShopAsync(Guid dealerSHopId, bool trackChanges)
         {
-            await CheckDealerShopIfExists(dealerSHopId, trackChanges);
+            await CheckDealerShopIfExistsAsync(dealerSHopId, trackChanges);
             var carEntities = await _repository.Car.GetCarsForDealerShopAsync(dealerSHopId, trackChanges);
 
             var carsForReturn = _mapper.Map<IEnumerable<CarDTO>>(carEntities);
@@ -36,7 +36,7 @@ namespace Service
 
         public async Task<CarDTO> CreateCarAsync(Guid dealerShopId, CarForCreationDTO car)
         {
-            await CheckDealerShopIfExists(dealerShopId, false);
+            await CheckDealerShopIfExistsAsync(dealerShopId, false);
             var carForCreate = _mapper.Map<Car>(car);
 
             _repository.Car.CreateCarForDealerShop(dealerShopId, carForCreate);
@@ -47,8 +47,8 @@ namespace Service
 
         public async Task<CarDTO> GetCarForDealerShopByIdAsync(Guid dealerShopId, Guid id, bool trackChanges)
         {
-            await CheckDealerShopIfExists(dealerShopId, trackChanges);
-            var car = await GetCarAndCheckIfItExists(dealerShopId, id, trackChanges);
+            await CheckDealerShopIfExistsAsync(dealerShopId, trackChanges);
+            var car = await GetCarAndCheckIfItExistsAsync(dealerShopId, id, trackChanges);
 
             var carForReturn = _mapper.Map<CarDTO>(car);
             return carForReturn;
@@ -71,29 +71,38 @@ namespace Service
             return cars;
         }
 
-        public async Task DeleteCarForDealerShop(Guid dealerShopId, Guid id, bool trackChanges)
+        public async Task DeleteCarForDealerShopAsync(Guid dealerShopId, Guid id, bool trackChanges)
         {
-            await CheckDealerShopIfExists(dealerShopId, trackChanges);
-            var car = await GetCarAndCheckIfItExists(dealerShopId, id, trackChanges);
+            await CheckDealerShopIfExistsAsync(dealerShopId, trackChanges);
+            var car = await GetCarAndCheckIfItExistsAsync(dealerShopId, id, trackChanges);
             _repository.Car.DeleteCarForDealerShop(car);
             await _repository.SaveAsync();
         }
 
-        private async Task CheckDealerShopIfExists(Guid dealerShopId, bool trackChanges)
+        public async Task EditCarForDealerShopAsync(Guid dealerShopId, Guid id, CarForEditDto carForEdit, bool trackChanges)
+        {
+            await CheckDealerShopIfExistsAsync(dealerShopId, trackChanges);
+            
+            var car = await GetCarAndCheckIfItExistsAsync(dealerShopId, id, trackChanges);
+            _mapper.Map(carForEdit, car);
+
+            await _repository.SaveAsync();
+        }
+
+        private async Task CheckDealerShopIfExistsAsync(Guid dealerShopId, bool trackChanges)
         {
             var dealerShop = await _repository.DealerShop.GetDealerShopAsync(dealerShopId, trackChanges);
             if (dealerShop is null)
                 throw new DealerShopNotFoundException(dealerShopId);
         }
 
-        private async Task<Car> GetCarAndCheckIfItExists(Guid dealerShopId, Guid id, bool trackChanges)
+        private async Task<Car> GetCarAndCheckIfItExistsAsync(Guid dealerShopId, Guid id, bool trackChanges)
         {
             var car = await _repository.Car.GetCarForDealerShopAsync(dealerShopId, id, trackChanges);
             if (car is null)
                 throw new CarNotFoundException(id);
             return car;
         }
-
 
     }
 }
