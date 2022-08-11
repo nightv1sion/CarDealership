@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using NetTopologySuite.Geometries;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,9 @@ namespace Service
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<DealerShopDTO>> GetAllDealerShopsAsync(bool trackChanges)
+        public async Task<IEnumerable<DealerShopDTO>> GetAllDealerShopsAsync(DealerShopParameters dealerShopParameters,bool trackChanges)
         {
-            var dealerShops = await _repository.DealerShop.GetAllDealerShopsAsync(trackChanges);
+            var dealerShops = await _repository.DealerShop.GetAllDealerShopsAsync(dealerShopParameters, trackChanges); ;
             var dealerShopsDto = _mapper.Map<IEnumerable<DealerShopDTO>>(dealerShops);
                 
             return dealerShopsDto;
@@ -97,7 +98,7 @@ namespace Service
 
         public async Task<IEnumerable<DealerShopMiniDTO>> GetOrdinalNumbersAsync()
         {
-            var dealerShopEntities = await _repository.DealerShop.GetAllDealerShopsAsync(false);
+            var dealerShopEntities = await _repository.DealerShop.GetAllDealerShopsAsync(new DealerShopParameters() { SearchTerm = null},false);
             var result = _mapper.Map<IEnumerable<DealerShopMiniDTO>>(dealerShopEntities);
 
             return result;

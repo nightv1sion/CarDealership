@@ -6699,3 +6699,18 @@
 2022-08-11 13:50:06.1736 Trace  Scanning Property LineEnding 'Default' NLog.Targets
 2022-08-11 13:50:06.1736 Trace FileTarget(Name=logfile) has 2 layouts
 2022-08-11 13:50:06.1736 Trace FileTarget(Name=logfile): Using appenderFactory: NLog.Internal.FileAppenders.SingleProcessFileAppender+Factory
+2022-08-11 16:48:04.9520 Info Message Template Auto Format enabled
+2022-08-11 16:48:05.1931 Debug ScanAssembly('NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c')
+2022-08-11 16:54:22.9820 Info Message Template Auto Format enabled
+2022-08-11 16:54:23.0877 Debug ScanAssembly('NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c')
+2022-08-11 16:54:23.7203 Trace FindReachableObject<NLog.Layouts.Layout>:
+2022-08-11 16:54:23.7203 Trace Scanning FileTarget 'FileTarget(Name=logfile)'
+2022-08-11 16:54:23.7203 Trace  Scanning Property FileName 'C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\logs\${shortdate}_logfile.txt' NLog.Layouts
+2022-08-11 16:54:23.7203 Trace  Scanning SimpleLayout 'C:\Users\Данила\Desktop\pet-projects\CarDealership\WebAPI\logs\${shortdate}_logfile.txt'
+2022-08-11 16:54:23.7203 Trace  Scanning Property Layout '${longdate} ${level:uppercase=true} ${message}' NLog.Layouts
+2022-08-11 16:54:23.7203 Trace  Scanning SimpleLayout '${longdate} ${level:uppercase=true} ${message}'
+2022-08-11 16:54:23.7203 Trace  Scanning Property LineEnding 'Default' NLog.Targets
+2022-08-11 16:54:23.7203 Trace FileTarget(Name=logfile) has 2 layouts
+2022-08-11 16:54:23.7203 Trace FileTarget(Name=logfile): Using appenderFactory: NLog.Internal.FileAppenders.SingleProcessFileAppender+Factory
+2022-08-11 16:56:13.1671 Info Message Template Auto Format enabled
+2022-08-11 16:56:13.3335 Debug ScanAssembly('NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c')

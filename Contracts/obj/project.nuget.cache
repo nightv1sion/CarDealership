@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "3VfrWiTgnF5OdjOmfjuQTQcI6i99SQ9lAkCa6AvIJ1rpCq4M7my/pIYacoHuSc+kTiNtvz90hbmDvzkemTziHg==",
+  "dgSpecHash": "IgAmM9bghE1hBlm7YIvjMcW96akaeyoiB8vrl41tzqVS2nmvk0AAdIFD6FMIM7B3Ld6TwmZNN+5s/pKVt3UtvQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Contracts\\Contracts.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Данила\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",

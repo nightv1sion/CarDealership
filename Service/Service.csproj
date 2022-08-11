@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Service.Contracts\Service.Contracts.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\WebAPI.Presentation\WebAPI.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

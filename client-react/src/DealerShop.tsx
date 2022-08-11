@@ -29,13 +29,17 @@ export default function Dealershop(){
         setTimeout(() => setStatusOfProcess(undefined), 5000);
     }
     
-    const getData = () => {fetch(process.env.REACT_APP_API + "dealershops", {
+    const getData = (searchTerm: string | undefined = undefined) => {
+        let uri = process.env.REACT_APP_API + "dealershops";
+        if(searchTerm)
+            uri = uri.concat("?searchTerm=" + searchTerm);
+        console.log(uri);
+        fetch(uri, {
         method: "GET",
         headers: {}
     })
     .then(response => response.json())
     .then(data => {console.log(data); setShops(Array.isArray(data) ? formatData(data) : new Array(0))})
-
     };
 
     useEffect(() => getData(), []);
@@ -43,8 +47,14 @@ export default function Dealershop(){
     const handleShow = () => {setIsOpenCreateForm(true)};
     const handleClose = () => {setIsOpenCreateForm(false)};
 
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let searchString = event.target.value;
+        getData(searchString);
+    }
+
     return <>
         <div className = "text-center w-75 m-auto">
+            <input className = "form-control mt-3" onChange = {handleSearch} placeholder = "Search by country or city"/>
             
             {statusOfProcess === true ? 
                 <div className="alert alert-success mt-2" role="alert">

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,9 @@ namespace WebAPI.Presentation.Contollers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDealerShops()
+        public async Task<IActionResult> GetDealerShops([FromQuery] DealerShopParameters dealerShopParameters)
         {
-            var dealerShops = await _service.DealerShopService.GetAllDealerShopsAsync(false);
+            var dealerShops = await _service.DealerShopService.GetAllDealerShopsAsync(dealerShopParameters, false);
             return Ok(dealerShops);
         }
 

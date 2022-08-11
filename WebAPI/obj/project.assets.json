@@ -1706,7 +1706,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "Entities": "1.0.0"
+          "Entities": "1.0.0",
+          "Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Contracts.dll": {}
@@ -1748,7 +1749,8 @@
         "dependencies": {
           "Contracts": "1.0.0",
           "Entities": "1.0.0",
-          "Microsoft.EntityFrameworkCore": "6.0.7"
+          "Microsoft.EntityFrameworkCore": "6.0.7",
+          "Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Repository.dll": {}
@@ -1766,7 +1768,8 @@
           "Entities": "1.0.0",
           "Repository": "1.0.0",
           "Service.Contracts": "1.0.0",
-          "Shared": "1.0.0"
+          "Shared": "1.0.0",
+          "WebAPI.Presentation": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Service.dll": {}

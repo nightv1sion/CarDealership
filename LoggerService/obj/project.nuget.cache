@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Jh2guBfeZEZoXBhW1WuBpgjdfv6Yz6NjhY/5jBVtr8MoCKbr2Kkfl8vkwWuwGn4l6OqNCKRwFRGQdNQz2NqDBw==",
+  "dgSpecHash": "PgmUFC2w6yUUAwrvGPYOwpfkzm7HKdapM7a7/2xgGunRlq8qO+knEHhL68oEzKLP4ttyb4ur+MJaRYwAGvKe9g==",
   "success": true,
   "projectFilePath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\LoggerService\\LoggerService.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Данила\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",

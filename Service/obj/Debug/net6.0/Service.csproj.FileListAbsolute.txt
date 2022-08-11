@@ -21,3 +21,5 @@ C:\Users\Данила\Desktop\pet-projects\CarDealership\Service\obj\Debug\net6.
 C:\Users\Данила\Desktop\pet-projects\CarDealership\Service\obj\Debug\net6.0\ref\Service.dll
 C:\Users\Данила\Desktop\pet-projects\CarDealership\Service\bin\Debug\net6.0\Repository.dll
 C:\Users\Данила\Desktop\pet-projects\CarDealership\Service\bin\Debug\net6.0\Repository.pdb
+C:\Users\Данила\Desktop\pet-projects\CarDealership\Service\bin\Debug\net6.0\WebAPI.Presentation.dll
+C:\Users\Данила\Desktop\pet-projects\CarDealership\Service\bin\Debug\net6.0\WebAPI.Presentation.pdb

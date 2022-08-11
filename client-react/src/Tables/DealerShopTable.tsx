@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Table } from "react-bootstrap";
 import DealerShopForm from "../Forms/DealerShopForm";
 import { dealerShop, photoDTO } from "../Interfaces";

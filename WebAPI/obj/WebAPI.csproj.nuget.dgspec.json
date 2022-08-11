@@ -35,6 +35,9 @@
             "projectReferences": {
               "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Entities\\Entities.csproj": {
                 "projectPath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Entities\\Entities.csproj"
+              },
+              "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Shared\\Shared.csproj"
               }
             }
           }
@@ -235,6 +238,9 @@
               },
               "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Entities\\Entities.csproj": {
                 "projectPath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Entities\\Entities.csproj"
+              },
+              "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Shared\\Shared.csproj"
               }
             }
           }
@@ -382,6 +388,9 @@
               },
               "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Shared\\Shared.csproj": {
                 "projectPath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\Shared\\Shared.csproj"
+              },
+              "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\WebAPI.Presentation\\WebAPI.Presentation.csproj": {
+                "projectPath": "C:\\Users\\Данила\\Desktop\\pet-projects\\CarDealership\\WebAPI.Presentation\\WebAPI.Presentation.csproj"
               }
             }
           }
