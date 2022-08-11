@@ -7,5 +7,5 @@
 :white_check_mark: Admin pop-up form for creating cars (binding to the dealershop,vehicle make, model, year of manufacture, body, generation, engine, drive, transmission, modification, color)  
 :white_check_mark: Admin pop-up form for editing cars (the same input field as for creating)  
 :white_check_mark: Admin table of all cars with delete and edit button  
-:o: Search for each table with filtering
+:white_check_mark: Search for each table
 
