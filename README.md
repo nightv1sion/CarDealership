@@ -1,5 +1,5 @@
 # CarDealership
-It is a test project(to keep a record about dealershops and cars for sale there) for get into building web application using React and ASP.NET Core
+It is a test project(to keep a record about dealershops and cars for sale there) to get into building web application using React and ASP.NET Core
 
 
 ### Admin:
