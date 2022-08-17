@@ -1,4 +1,6 @@
 # CarDealership
+It is a test project for get into building web application using React and ASP.NET Core
+
 
 ### Admin:
 :white_check_mark: Admin pop-up form for creating dealershops (loading images, input a sequential number, location (with map api), country, city, address, email, phone number)  
